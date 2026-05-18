@@ -892,19 +892,62 @@ section{padding:128px 52px}
 .form-submit .sym{font-size:22px}
 .form-success{
   display:none;
-  text-align:center;padding:48px 0;
+  flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:64px 32px;
+  min-height:400px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .6s cubic-bezier(0.16,1,0.3,1),transform .6s cubic-bezier(0.16,1,0.3,1);
 }
-.form-success-icon{
-  font-size:48px;color:var(--accent);margin-bottom:18px;
+.form-success.visible{opacity:1;transform:translateY(0)}
+.form-success-ring{
+  position:relative;
+  width:80px;height:80px;
+  margin-bottom:36px;flex-shrink:0;
+}
+.form-success-ring::before{
+  content:'';position:absolute;inset:-10px;border-radius:50%;
+  border:1px solid rgba(200,255,0,.2);
+  animation:successPing 2.2s ease-out infinite;
+}
+.form-success-ring::after{
+  content:'';position:absolute;inset:-22px;border-radius:50%;
+  border:1px solid rgba(200,255,0,.08);
+  animation:successPing 2.2s ease-out infinite .45s;
+}
+@keyframes successPing{
+  0%{transform:scale(1);opacity:1}
+  100%{transform:scale(1.75);opacity:0}
+}
+.form-success-circle{
+  width:80px;height:80px;border-radius:50%;
+  border:1px solid rgba(200,255,0,.4);
+  background:rgba(200,255,0,.06);
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;color:var(--accent);
 }
 .form-success h3{
-  font-family:var(--font-display);font-size:36px;
-  letter-spacing:.06em;margin-bottom:10px;
+  font-family:var(--font-display);
+  font-size:clamp(28px,4vw,44px);
+  letter-spacing:.06em;margin-bottom:14px;line-height:.95;
+}
+.form-success h3 .out{
+  -webkit-text-stroke:1px rgba(255,255,255,.22);color:transparent;
 }
 .form-success p{
   font-family:var(--font-mono);font-size:12px;
-  color:var(--dim);line-height:1.7;
+  color:var(--dim);line-height:1.85;max-width:300px;
 }
+.form-success-line{width:32px;height:1px;background:var(--accent);margin:24px auto;opacity:.5}
+.form-submit.loading{pointer-events:none;opacity:.6}
+.form-submit .btn-spinner{
+  display:none;width:18px;height:18px;
+  border:2px solid rgba(0,0,0,.3);border-top-color:#000;
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+.form-submit.loading .btn-spinner{display:block}
+.form-submit.loading .btn-text{opacity:.55}
 
 /* ─────────────────────────────────────────
    FOOTER
@@ -1311,27 +1354,31 @@ body{padding-bottom:42px}
       <form id="biz-form" novalidate>
         <div class="form-row">
           <label class="form-label" for="biz-name">Your Name</label>
-          <input class="form-input" id="biz-name" type="text" placeholder="Full name" required autocomplete="off">
+          <input class="form-input" id="biz-name" name="name" type="text" placeholder="Full name" required autocomplete="off">
         </div>
         <div class="form-row">
           <label class="form-label" for="biz-email">Email Address</label>
-          <input class="form-input" id="biz-email" type="email" placeholder="your@email.com" required autocomplete="off">
+          <input class="form-input" id="biz-email" name="email" type="email" placeholder="your@email.com" required autocomplete="off">
         </div>
         <div class="form-row">
           <label class="form-label" for="biz-subject">Subject</label>
-          <input class="form-input" id="biz-subject" type="text" placeholder="e.g. Licensing inquiry" required autocomplete="off">
+          <input class="form-input" id="biz-subject" name="subject_line" type="text" placeholder="e.g. Licensing inquiry" required autocomplete="off">
         </div>
         <div class="form-row">
           <label class="form-label" for="biz-msg">Message</label>
-          <textarea class="form-textarea form-input" id="biz-msg" placeholder="Tell us about your project..." required></textarea>
+          <textarea class="form-textarea form-input" id="biz-msg" name="message" placeholder="Tell us about your project..." required></textarea>
         </div>
-        <button type="submit" class="form-submit">
-          <span>SEND MESSAGE</span>
+        <button type="submit" class="form-submit" id="biz-submit">
+          <span class="btn-text">SEND MESSAGE</span>
+          <span class="btn-spinner"></span>
           <span class="sym">✦</span>
         </button>
         <div class="form-success" id="biz-success">
-          <div class="form-success-icon">✦</div>
-          <h3>MESSAGE RECEIVED</h3>
+          <div class="form-success-ring">
+            <div class="form-success-circle">✦</div>
+          </div>
+          <h3>MESSAGE<br><span class="out">RECEIVED</span></h3>
+          <div class="form-success-line"></div>
           <p>We'll review your inquiry and get back to you within 3–5 business days.</p>
         </div>
       </form>
@@ -1349,15 +1396,15 @@ body{padding-bottom:42px}
       <form id="demo-form" novalidate>
         <div class="form-row">
           <label class="form-label" for="dm-name">Artist Name</label>
-          <input class="form-input" id="dm-name" type="text" placeholder="Your stage name" required autocomplete="off">
+          <input class="form-input" id="dm-name" name="artist_name" type="text" placeholder="Your stage name" required autocomplete="off">
         </div>
         <div class="form-row">
           <label class="form-label" for="dm-email">Email Address</label>
-          <input class="form-input" id="dm-email" type="email" placeholder="your@email.com" required autocomplete="off">
+          <input class="form-input" id="dm-email" name="email" type="email" placeholder="your@email.com" required autocomplete="off">
         </div>
         <div class="form-row">
           <label class="form-label" for="dm-genre">Genre</label>
-          <select class="form-input form-select" id="dm-genre" required>
+          <select class="form-input form-select" id="dm-genre" name="genre" required>
             <option value="" disabled selected>Select your genre</option>
             <option value="Hip-Hop / Rap">Hip-Hop / Rap</option>
             <option value="Trap / Beats">Trap / Beats</option>
@@ -1370,19 +1417,23 @@ body{padding-bottom:42px}
         </div>
         <div class="form-row">
           <label class="form-label" for="dm-link">Track Link</label>
-          <input class="form-input" id="dm-link" type="url" placeholder="SoundCloud / Spotify / YouTube URL" required autocomplete="off">
+          <input class="form-input" id="dm-link" name="track_link" type="url" placeholder="SoundCloud / Spotify / YouTube URL" required autocomplete="off">
         </div>
         <div class="form-row">
           <label class="form-label" for="dm-about">About Your Sound</label>
-          <input class="form-input" id="dm-about" type="text" placeholder="Influences, vision, goals..." autocomplete="off">
+          <input class="form-input" id="dm-about" name="about_sound" type="text" placeholder="Influences, vision, goals..." autocomplete="off">
         </div>
-        <button type="submit" class="form-submit">
-          <span>SEND DEMO</span>
+        <button type="submit" class="form-submit" id="demo-submit">
+          <span class="btn-text">SEND DEMO</span>
+          <span class="btn-spinner"></span>
           <span class="sym">→</span>
         </button>
         <div class="form-success" id="demo-success">
-          <div class="form-success-icon">✦</div>
-          <h3>DEMO RECEIVED</h3>
+          <div class="form-success-ring">
+            <div class="form-success-circle">✦</div>
+          </div>
+          <h3>DEMO<br><span class="out">RECEIVED</span></h3>
+          <div class="form-success-line"></div>
           <p>Our A&amp;R team will review your submission. If it's the right fit, we'll reach out directly.</p>
         </div>
       </form>
@@ -1750,38 +1801,123 @@ trackList.addEventListener('click', e=>{
 loadTrack(0);
 
 /* ─────────────────────────────────────────
-   FORMS
+   FORMS — Web3Forms async (no page reload, no mailto)
+   Key: c1cbb0be-6523-4a99-9378-fe9f7d8c5784
 ───────────────────────────────────────── */
-function handleForm(formId, successId, extraFields){
-  const form    = document.getElementById(formId);
-  const success = document.getElementById(successId);
-  if(!form) return;
+const W3F_KEY     = 'c1cbb0be-6523-4a99-9378-fe9f7d8c5784';
+const W3F_API     = 'https://api.web3forms.com/submit';
+const RESET_DELAY = 7000; // ms before form reappears after success
 
-  form.addEventListener('submit', e=>{
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(form));
-    const name  = form.querySelector('[type="text"]')?.value.trim();
-    const email = form.querySelector('[type="email"]')?.value.trim();
-    if(!name||!email) return;
+function showSuccess(formEl, successEl, submitBtn){
+  /* hide form fields, show success panel */
+  Array.from(formEl.elements).forEach(el=>{ el.style.opacity='0'; el.style.pointerEvents='none'; });
+  submitBtn.style.display='none';
+  successEl.style.display='flex';
+  /* trigger CSS transition on next frame */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>successEl.classList.add('visible')));
+  /* auto-reset */
+  setTimeout(()=>{
+    successEl.classList.remove('visible');
+    setTimeout(()=>{
+      successEl.style.display='none';
+      submitBtn.style.display='';
+      Array.from(formEl.elements).forEach(el=>{ el.style.opacity=''; el.style.pointerEvents=''; });
+      formEl.reset();
+    }, 600);
+  }, RESET_DELAY);
+}
 
-    const subject = encodeURIComponent(`AGM — ${formId==='demo-form'?'Demo Submission':'Inquiry'} from ${name}`);
-    const bodyLines = [`Name: ${name}`,`Email: ${email}`];
-    (extraFields||[]).forEach(id=>{
-      const el=form.querySelector('#'+id);
-      if(el&&el.value) bodyLines.push(`${el.dataset.label||id}: ${el.value}`);
-    });
-    const body = encodeURIComponent(bodyLines.join('\n'));
-
-    window.location.href=`mailto:yoavagami0@gmail.com?subject=${subject}&body=${body}`;
-
-    form.style.display='none';
-    success.style.display='block';
-    setTimeout(()=>{form.style.display='block';success.style.display='none';form.reset();},6000);
+function shakeInvalid(el){
+  el.style.animation='none';
+  requestAnimationFrame(()=>{
+    el.style.animation='shakeField .4s ease';
+    el.addEventListener('animationend',()=>el.style.animation='',{once:true});
   });
 }
 
-handleForm('biz-form','biz-success',['biz-subject','biz-msg']);
-handleForm('demo-form','demo-success',['dm-genre','dm-link','dm-about']);
+async function submitToWeb3Forms(formId, successId, submitId, fromLabel){
+  const form      = document.getElementById(formId);
+  const successEl = document.getElementById(successId);
+  const submitBtn = document.getElementById(submitId);
+  if(!form||!successEl||!submitBtn) return;
+
+  form.addEventListener('submit', async e=>{
+    e.preventDefault();
+
+    /* basic validation */
+    const nameEl  = form.querySelector('[type="text"]');
+    const emailEl = form.querySelector('[type="email"]');
+    const nameVal  = nameEl?.value.trim()||'';
+    const emailVal = emailEl?.value.trim()||'';
+    if(!nameVal){ shakeInvalid(nameEl); return; }
+    if(!emailVal||!emailVal.includes('@')){ shakeInvalid(emailEl); return; }
+
+    /* loading state */
+    submitBtn.classList.add('loading');
+
+    /* build payload — Web3Forms reads all keys in the JSON body */
+    const payload = {
+      access_key: W3F_KEY,
+      subject:    `AGM — ${fromLabel} from ${nameVal}`,
+      from_name:  'AGM Music Group Website',
+      /* collect every named field automatically */
+      ...Object.fromEntries(
+        Array.from(form.elements)
+          .filter(el=>el.name&&el.value&&el.type!=='submit')
+          .map(el=>[el.name, el.value])
+      )
+    };
+
+    try{
+      const resp = await fetch(W3F_API, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify(payload)
+      });
+
+      const result = await resp.json();
+
+      if(result.success){
+        showSuccess(form, successEl, submitBtn);
+      } else {
+        /* Web3Forms returned an error — show inline message */
+        submitBtn.classList.remove('loading');
+        const errMsg = result.message||'Submission failed. Please try again.';
+        let errEl = form.querySelector('.form-err');
+        if(!errEl){
+          errEl = document.createElement('p');
+          errEl.className='form-err';
+          errEl.style.cssText='font-family:var(--font-mono);font-size:11px;color:#ff6b6b;margin-top:14px;letter-spacing:.12em;';
+          submitBtn.insertAdjacentElement('afterend', errEl);
+        }
+        errEl.textContent = errMsg;
+        setTimeout(()=>errEl.remove(), 5000);
+      }
+    } catch(networkErr){
+      submitBtn.classList.remove('loading');
+      let errEl = form.querySelector('.form-err');
+      if(!errEl){
+        errEl = document.createElement('p');
+        errEl.className='form-err';
+        errEl.style.cssText='font-family:var(--font-mono);font-size:11px;color:#ff6b6b;margin-top:14px;letter-spacing:.12em;';
+        submitBtn.insertAdjacentElement('afterend', errEl);
+      }
+      errEl.textContent='Network error. Please check your connection and try again.';
+      setTimeout(()=>errEl.remove(), 5000);
+    } finally{
+      submitBtn.classList.remove('loading');
+    }
+  });
+}
+
+/* shake animation for invalid fields */
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent='@keyframes shakeField{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}';
+document.head.appendChild(shakeStyle);
+
+/* wire up both forms */
+submitToWeb3Forms('biz-form','biz-success','biz-submit','Business Inquiry');
+submitToWeb3Forms('demo-form','demo-success','demo-submit','Demo Submission');
 
 /* ─────────────────────────────────────────
    PROG BAR DRAG
