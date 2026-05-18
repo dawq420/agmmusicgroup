@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AGM Music Group — Elite music agency and independent label bridging local talent with global distribution.">
+<title>AGM Music Group | Elite Music Agency & Independent Label</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   RESET & TOKENS
+───────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#030303;
+  --bg2:#080808;
+  --bg3:#0d0d0d;
+  --white:#f0ede6;
+  --dim:#666;
+  --dim2:#444;
+  --accent:#c8ff00;
+  --accent2:rgba(200,255,0,0.12);
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --font-display:'Bebas Neue',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --font-body:'Syne',sans-serif;
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ease-in-out:cubic-bezier(0.65,0,0.35,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* ─────────────────────────────────────────
+   PERFORMANCE LAYER — GPU-COMPOSITED ONLY
+───────────────────────────────────────── */
+.will-transform{will-change:transform}
+.will-opacity{will-change:opacity}
+
+/* ─────────────────────────────────────────
+   CUSTOM CURSOR
+───────────────────────────────────────── */
+#cur{
+  position:fixed;
+  width:10px;height:10px;
+  background:var(--accent);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .18s var(--ease-out),height .18s var(--ease-out),background .18s;
+  mix-blend-mode:difference;
+}
+#cur-ring{
+  position:fixed;
+  width:36px;height:36px;
+  border:1px solid rgba(200,255,0,.35);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:width .22s var(--ease-out),height .22s var(--ease-out),border-color .22s;
+}
+body.cursor-hover #cur{width:18px;height:18px}
+body.cursor-hover #cur-ring{width:56px;height:56px;border-color:rgba(200,255,0,.6)}
+body.cursor-click #cur{width:6px;height:6px}
+
+/* ─────────────────────────────────────────
+   NOISE OVERLAY
+───────────────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9990;
+  opacity:.5;
+}
+
+/* ─────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────── */
+#nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:500;
+  padding:22px 52px;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background .4s,backdrop-filter .4s,border-color .4s;
+  border-bottom:1px solid transparent;
+}
+#nav.scrolled{
+  background:rgba(3,3,3,.88);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-color:var(--border);
+}
+.nav-brand{
+  font-family:var(--font-display);
+  font-size:20px;
+  letter-spacing:.18em;
+  color:var(--white);
+  text-decoration:none;
+  cursor:none;
+}
+.nav-links{
+  display:flex;gap:44px;list-style:none;
+}
+.nav-links a{
+  font-family:var(--font-mono);
+  font-size:10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--dim);
+  text-decoration:none;
+  cursor:none;
+  transition:color .25s;
+  position:relative;
+}
+.nav-links a::after{
+  content:'';
+  position:absolute;bottom:-4px;left:0;right:0;
+  height:1px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s var(--ease-out);
+}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  font-family:var(--font-mono);
+  font-size:10px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:#000;
+  background:var(--accent);
+  padding:10px 22px;
+  text-decoration:none;
+  cursor:none;
+  transition:filter .2s,transform .2s;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.nav-cta:hover{filter:brightness(1.1);transform:translateY(-1px)}
+
+/* ─────────────────────────────────────────
+   HERO
+───────────────────────────────────────── */
+#hero{
+  position:relative;
+  height:100vh;min-height:640px;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:0 52px 72px;
+  overflow:hidden;
+}
+
+/* glow fx */
+.hero-fx{
+  position:absolute;inset:0;
+  pointer-events:none;z-index:0;
+}
+.glow-blob{
+  position:absolute;border-radius:50%;
+  filter:blur(110px);opacity:0;
+  will-change:opacity,transform;
+}
+.glow-blob.c{
+  width:64vw;height:64vw;
+  top:50%;left:50%;
+  transform:translate(-50%,-54%);
+  background:radial-gradient(circle,rgba(255,255,255,.15) 0%,rgba(200,200,200,.04) 55%,transparent 72%);
+  animation:glowC 9s ease-in-out infinite;
+}
+.glow-blob.l{
+  width:38vw;height:38vw;top:14%;left:-8%;
+  background:radial-gradient(circle,rgba(200,255,0,.07) 0%,transparent 70%);
+  animation:glowL 13s ease-in-out infinite 2.5s;
+}
+.glow-blob.r{
+  width:32vw;height:32vw;top:22%;right:-6%;
+  background:radial-gradient(circle,rgba(255,255,255,.07) 0%,transparent 70%);
+  animation:glowR 11s ease-in-out infinite 5s;
+}
+.flash-l{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 36%,rgba(255,255,255,.22) 0%,transparent 60%);
+  opacity:0;
+  animation:flashP 18s ease-in-out infinite;
+}
+.hero-vig{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,transparent 35%,rgba(3,3,3,.9) 100%);
+  pointer-events:none;z-index:0;
+}
+@keyframes glowC{
+  0%{opacity:0;transform:translate(-50%,-54%) scale(1)}
+  25%{opacity:.72;transform:translate(-50%,-52%) scale(1.04)}
+  55%{opacity:.38;transform:translate(-50%,-56%) scale(.97)}
+  80%{opacity:.60;transform:translate(-50%,-53%) scale(1.02)}
+  100%{opacity:0;transform:translate(-50%,-54%) scale(1)}
+}
+@keyframes glowL{
+  0%{opacity:0}30%{opacity:.55}60%{opacity:.2}85%{opacity:.6}100%{opacity:0}
+}
+@keyframes glowR{
+  0%{opacity:0}20%{opacity:.42}50%{opacity:.12}75%{opacity:.52}100%{opacity:0}
+}
+@keyframes flashP{
+  0%,7%,9%,38%,39.5%,100%{opacity:0}
+  8%{opacity:.52}
+  39%{opacity:.26}
+}
+
+/* hero content */
+.hero-bg-word{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:var(--font-display);
+  font-size:clamp(130px,24vw,340px);
+  color:rgba(255,255,255,.022);
+  white-space:nowrap;pointer-events:none;user-select:none;
+  letter-spacing:-.02em;
+  animation:bgDrift 22s ease-in-out infinite alternate;
+  z-index:0;
+}
+@keyframes bgDrift{
+  from{transform:translate(-52%,-50%) rotate(-1.2deg)}
+  to{transform:translate(-48%,-50%) rotate(1.2deg)}
+}
+.hero-eyebrow{
+  position:relative;z-index:1;
+  font-family:var(--font-mono);
+  font-size:11px;letter-spacing:.38em;
+  color:var(--accent);text-transform:uppercase;
+  margin-bottom:22px;
+  display:flex;align-items:center;gap:14px;
+  opacity:0;animation:fadeUp .8s .15s var(--ease-out) forwards;
+}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--accent)}
+.hero-title{
+  position:relative;z-index:1;
+  font-family:var(--font-display);
+  font-size:clamp(80px,14vw,200px);
+  line-height:.88;letter-spacing:-.01em;
+  margin-bottom:36px;
+  opacity:0;animation:fadeUp .85s .28s var(--ease-out) forwards;
+}
+.hero-title .out{
+  -webkit-text-stroke:1.5px rgba(255,255,255,.22);
+  color:transparent;
+}
+.hero-title .acc{color:var(--accent)}
+.hero-bottom{
+  position:relative;z-index:1;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  opacity:0;animation:fadeUp .85s .44s var(--ease-out) forwards;
+}
+.hero-sub{
+  font-family:var(--font-mono);
+  font-size:13px;color:var(--dim);
+  line-height:1.85;max-width:380px;
+}
+.hero-sub strong{color:rgba(255,255,255,.7);font-weight:400}
+.hero-actions{display:flex;gap:14px;align-items:center}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--accent);color:#000;
+  padding:16px 32px;
+  font-family:var(--font-body);font-weight:800;font-size:12px;
+  letter-spacing:.18em;text-transform:uppercase;
+  text-decoration:none;cursor:none;border:none;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:filter .2s,transform .2s;
+}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:9px;
+  background:transparent;color:var(--white);
+  padding:15px 30px;
+  font-family:var(--font-body);font-weight:700;font-size:12px;
+  letter-spacing:.18em;text-transform:uppercase;
+  text-decoration:none;cursor:none;
+  border:1px solid var(--border2);
+  transition:border-color .25s,transform .2s;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);transform:translateY(-2px)}
+
+/* scroll indicator */
+.scroll-ind{
+  position:absolute;bottom:28px;left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  z-index:1;
+  opacity:0;animation:fadeIn 1.2s 1.2s ease forwards;
+}
+.scroll-ind span{
+  font-family:var(--font-mono);font-size:9px;
+  letter-spacing:.35em;color:var(--dim2);text-transform:uppercase;
+}
+.scroll-line{
+  width:1px;height:44px;
+  background:linear-gradient(to bottom,var(--accent),transparent);
+  animation:scrollPulse 2.2s ease-in-out infinite;
+}
+@keyframes scrollPulse{
+  0%,100%{opacity:.2;transform:scaleY(.5);transform-origin:top}
+  50%{opacity:1;transform:scaleY(1)}
+}
+
+/* ─────────────────────────────────────────
+   TICKER
+───────────────────────────────────────── */
+.ticker{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;padding:12px 0;
+  background:rgba(200,255,0,.025);
+}
+.ticker-inner{
+  display:flex;
+  animation:tickerRun 24s linear infinite;
+  white-space:nowrap;
+  will-change:transform;
+}
+.ticker-inner:hover{animation-play-state:paused}
+.t-item{
+  font-family:var(--font-display);
+  font-size:14px;letter-spacing:.3em;
+  color:var(--accent);padding:0 52px;
+  flex-shrink:0;
+}
+@keyframes tickerRun{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* ─────────────────────────────────────────
+   SECTION COMMON
+───────────────────────────────────────── */
+section{padding:128px 52px}
+.s-label{
+  font-family:var(--font-mono);
+  font-size:10px;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:52px;
+  display:flex;align-items:center;gap:14px;
+}
+.s-label::before{content:'';display:block;width:28px;height:1px;background:var(--accent)}
+
+/* reveal animation */
+.reveal{
+  opacity:0;transform:translateY(44px);
+  transition:opacity .9s var(--ease-out),transform .9s var(--ease-out);
+}
+.reveal.on{opacity:1;transform:translateY(0)}
+.reveal-d1{transition-delay:.08s}
+.reveal-d2{transition-delay:.16s}
+.reveal-d3{transition-delay:.24s}
+.reveal-d4{transition-delay:.32s}
+
+/* ─────────────────────────────────────────
+   ABOUT
+───────────────────────────────────────── */
+#about{background:var(--bg2);border-top:1px solid var(--border)}
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:var(--border);
+  margin-top:56px;
+}
+.about-main{
+  background:var(--bg2);
+  padding:64px 56px;
+  grid-column:1 / -1;
+}
+.about-headline{
+  font-family:var(--font-display);
+  font-size:clamp(44px,6vw,80px);
+  line-height:.9;letter-spacing:-.01em;
+  margin-bottom:36px;
+}
+.about-headline .out{
+  -webkit-text-stroke:1px rgba(255,255,255,.2);color:transparent;
+}
+.about-body{
+  font-family:var(--font-mono);
+  font-size:13.5px;color:var(--dim);
+  line-height:2;max-width:680px;
+  column-count:2;column-gap:48px;
+}
+.about-body p+p{margin-top:1.4em}
+.about-pillars{
+  background:var(--bg2);
+  padding:48px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.pillar{
+  padding:26px 0;
+  border-bottom:1px solid var(--border);
+}
+.pillar:first-child{border-top:1px solid var(--border)}
+.pillar-n{
+  font-family:var(--font-display);
+  font-size:44px;color:rgba(255,255,255,.05);
+  line-height:1;margin-bottom:12px;
+}
+.pillar-title{
+  font-family:var(--font-display);
+  font-size:22px;letter-spacing:.04em;
+  margin-bottom:8px;
+}
+.pillar-desc{
+  font-family:var(--font-mono);
+  font-size:11.5px;color:var(--dim);line-height:1.8;
+}
+.about-stat-row{
+  background:var(--bg3);
+  grid-column:1 / -1;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border);
+}
+.stat-block{
+  background:var(--bg3);
+  padding:44px 40px;
+  position:relative;overflow:hidden;
+}
+.stat-block::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--accent),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.stat-block:hover::before{opacity:1}
+.stat-num{
+  font-family:var(--font-display);
+  font-size:64px;line-height:1;
+  color:var(--accent);
+}
+.stat-label{
+  font-family:var(--font-mono);
+  font-size:10px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--dim);
+  margin-top:8px;
+}
+
+/* ─────────────────────────────────────────
+   ROSTER
+───────────────────────────────────────── */
+#roster{border-top:1px solid var(--border)}
+.roster-head{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:64px;
+}
+.roster-title{
+  font-family:var(--font-display);
+  font-size:clamp(52px,9vw,108px);
+  line-height:.88;letter-spacing:-.01em;
+}
+.roster-title .out{
+  -webkit-text-stroke:1px rgba(255,255,255,.18);color:transparent;
+}
+.roster-meta{
+  font-family:var(--font-mono);
+  font-size:11px;color:var(--dim);
+  letter-spacing:.2em;padding-bottom:8px;
+}
+.roster-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+}
+
+/* artist card */
+.a-card{
+  background:var(--bg);
+  position:relative;overflow:hidden;
+  aspect-ratio:3/4;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.a-card:not(.ph):hover .a-img{transform:scale(1.05)}
+.a-card:not(.ph):hover .a-overlay{opacity:1}
+.a-card:not(.ph):hover .a-tags{transform:translateY(0);opacity:1}
+.a-img{
+  position:absolute;inset:0;
+  transition:transform .65s var(--ease-out);
+  will-change:transform;
+}
+.a-img.julien{
+  background:
+    radial-gradient(circle at 38% 22%,rgba(200,255,0,.08) 0%,transparent 52%),
+    radial-gradient(circle at 68% 78%,rgba(255,255,255,.04) 0%,transparent 46%),
+    linear-gradient(155deg,#1e1e1e 0%,#080808 60%,#141414 100%);
+}
+.a-img.jdyhr{
+  background:
+    radial-gradient(circle at 62% 20%,rgba(140,60,255,.12) 0%,transparent 52%),
+    radial-gradient(circle at 28% 72%,rgba(255,50,120,.08) 0%,transparent 46%),
+    linear-gradient(145deg,#110e1a 0%,#08080f 55%,#100b18 100%);
+}
+.a-num{
+  position:absolute;top:22px;left:22px;
+  font-family:var(--font-display);font-size:72px;
+  color:rgba(255,255,255,.045);line-height:1;user-select:none;
+}
+.a-init{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:var(--font-display);
+  font-size:clamp(72px,11vw,130px);
+  color:rgba(255,255,255,.05);
+  letter-spacing:-.02em;user-select:none;
+}
+.a-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(3,3,3,.96) 0%,rgba(3,3,3,.28) 42%,transparent 68%);
+}
+.a-overlay{
+  position:absolute;inset:0;
+  background:rgba(200,255,0,.035);
+  border:1px solid rgba(200,255,0,.18);
+  opacity:0;transition:opacity .32s;
+}
+.a-content{
+  position:relative;z-index:2;padding:28px;
+}
+.a-role{
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:.28em;color:var(--accent);
+  text-transform:uppercase;margin-bottom:7px;
+}
+.a-name{
+  font-family:var(--font-display);
+  font-size:clamp(26px,3.2vw,38px);
+  letter-spacing:.02em;line-height:1;margin-bottom:14px;
+}
+.a-tags{
+  display:flex;gap:7px;flex-wrap:wrap;
+  transform:translateY(9px);opacity:0;
+  transition:all .3s .05s;
+}
+.tag{
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:.14em;color:#000;
+  background:var(--accent);padding:4px 10px;
+  text-transform:uppercase;
+}
+.a-links{
+  display:flex;gap:10px;margin-top:14px;
+}
+.a-link{
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:.14em;color:var(--dim);
+  text-decoration:none;cursor:none;
+  padding:6px 12px;border:1px solid var(--border);
+  transition:color .2s,border-color .2s;
+}
+.a-link:hover{color:var(--accent);border-color:rgba(200,255,0,.4)}
+
+/* placeholder */
+.ph{
+  background:rgba(255,255,255,.01);
+  border:1px dashed rgba(255,255,255,.06);
+  align-items:center;justify-content:center;
+}
+.ph-inner{text-align:center}
+.ph-icon{font-size:36px;opacity:.12;margin-bottom:14px}
+.ph-text{
+  font-family:var(--font-display);font-size:18px;
+  letter-spacing:.22em;color:rgba(255,255,255,.1);
+}
+.ph-sub{
+  font-family:var(--font-mono);font-size:9px;
+  color:rgba(255,255,255,.07);letter-spacing:.22em;margin-top:7px;
+}
+
+/* EPK block */
+.epk-block{
+  margin-top:1px;background:var(--border);
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
+}
+.epk-card{
+  background:var(--bg);
+  padding:36px 40px;
+  position:relative;overflow:hidden;
+  transition:background .28s;
+}
+.epk-card:hover{background:#0d0d0d}
+.epk-card:hover .epk-arrow{transform:translate(3px,-3px)}
+.epk-num{
+  font-family:var(--font-display);font-size:52px;
+  color:rgba(255,255,255,.04);line-height:1;margin-bottom:20px;
+}
+.epk-title{
+  font-family:var(--font-display);font-size:24px;
+  letter-spacing:.04em;margin-bottom:10px;
+}
+.epk-body{
+  font-family:var(--font-mono);font-size:11.5px;
+  color:var(--dim);line-height:1.78;
+}
+.epk-arrow{
+  position:absolute;top:28px;right:28px;
+  font-size:18px;color:var(--accent);
+  transition:transform .28s;
+}
+
+/* ─────────────────────────────────────────
+   MUSIC PLAYER
+───────────────────────────────────────── */
+#music{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+}
+.player-wrap{
+  margin-top:56px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+}
+.player-art{
+  background:var(--bg3);
+  aspect-ratio:1;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.player-art-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 40% 40%,rgba(200,255,0,.09) 0%,transparent 55%),
+    radial-gradient(circle at 70% 70%,rgba(255,255,255,.04) 0%,transparent 45%),
+    linear-gradient(145deg,#161616,#080808);
+}
+.player-art-letter{
+  font-family:var(--font-display);
+  font-size:clamp(100px,16vw,180px);
+  color:rgba(255,255,255,.06);
+  user-select:none;position:relative;z-index:1;
+}
+.vinyl-ring{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.04);
+  animation:spin 14s linear infinite;
+  animation-play-state:paused;
+}
+.vinyl-ring.r1{width:55%;height:55%}
+.vinyl-ring.r2{width:72%;height:72%;border-color:rgba(200,255,0,.04)}
+.vinyl-ring.r3{width:88%;height:88%}
+.player-playing .vinyl-ring{animation-play-state:running}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.player-badge{
+  position:absolute;top:22px;left:22px;
+  background:var(--accent);color:#000;
+  font-family:var(--font-mono);font-size:9px;
+  letter-spacing:.22em;padding:5px 12px;
+  text-transform:uppercase;font-weight:500;
+}
+.player-waveform{
+  position:absolute;bottom:22px;left:22px;
+  display:flex;align-items:flex-end;gap:3px;height:22px;
+}
+.player-bar{
+  width:3px;background:var(--accent);border-radius:1px;
+  animation:barA 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.player-playing .player-bar{animation-play-state:running}
+.player-bar:nth-child(1){height:8px;animation-delay:0s}
+.player-bar:nth-child(2){height:16px;animation-delay:.1s}
+.player-bar:nth-child(3){height:22px;animation-delay:.2s}
+.player-bar:nth-child(4){height:14px;animation-delay:.3s}
+.player-bar:nth-child(5){height:20px;animation-delay:.15s}
+.player-bar:nth-child(6){height:10px;animation-delay:.25s}
+@keyframes barA{
+  0%,100%{transform:scaleY(.35)}
+  50%{transform:scaleY(1)}
+}
+
+.player-controls{
+  background:var(--bg2);
+  padding:52px 56px;
+  display:flex;flex-direction:column;justify-content:center;gap:32px;
+}
+.track-meta{}
+.track-artist{
+  font-family:var(--font-mono);font-size:11px;
+  letter-spacing:.28em;color:var(--accent);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.track-name{
+  font-family:var(--font-display);
+  font-size:clamp(40px,5vw,64px);
+  line-height:.92;letter-spacing:-.01em;
+}
+.track-detail{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--dim);margin-top:12px;letter-spacing:.12em;
+}
+
+/* progress bar */
+.prog-wrap{
+  display:flex;flex-direction:column;gap:10px;
+}
+.prog-bar{
+  width:100%;height:2px;
+  background:rgba(255,255,255,.08);
+  cursor:none;position:relative;
+  border-radius:1px;
+}
+.prog-fill{
+  height:100%;background:var(--accent);
+  border-radius:1px;width:0%;
+  transition:width .1s linear;
+  position:relative;
+}
+.prog-fill::after{
+  content:'';
+  position:absolute;right:-5px;top:50%;
+  transform:translateY(-50%);
+  width:10px;height:10px;
+  background:var(--accent);border-radius:50%;
+  opacity:0;transition:opacity .2s;
+}
+.prog-bar:hover .prog-fill::after{opacity:1}
+.prog-times{
+  display:flex;justify-content:space-between;
+  font-family:var(--font-mono);font-size:11px;color:var(--dim);
+  letter-spacing:.1em;
+}
+
+/* buttons row */
+.ctrl-row{
+  display:flex;align-items:center;gap:18px;
+}
+.ctrl-btn{
+  background:none;border:none;cursor:none;
+  color:var(--dim);
+  transition:color .2s,transform .2s;
+  padding:8px;line-height:0;
+}
+.ctrl-btn:hover{color:var(--white);transform:scale(1.1)}
+.ctrl-play{
+  width:56px;height:56px;
+  background:var(--accent);border:none;
+  border-radius:50%;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  color:#000;transition:filter .2s,transform .2s;
+  flex-shrink:0;
+}
+.ctrl-play:hover{filter:brightness(1.1);transform:scale(1.05)}
+.vol-row{
+  display:flex;align-items:center;gap:12px;
+  margin-top:-8px;
+}
+.vol-icon{
+  font-family:var(--font-mono);font-size:11px;color:var(--dim);
+}
+.vol-bar{
+  flex:1;height:2px;
+  background:rgba(255,255,255,.08);
+  cursor:none;position:relative;border-radius:1px;
+}
+.vol-fill{
+  height:100%;background:rgba(255,255,255,.3);
+  border-radius:1px;width:80%;
+}
+
+/* track list */
+.track-list{
+  margin-top:1px;background:var(--border);
+}
+.track-row{
+  background:var(--bg2);
+  display:flex;align-items:center;gap:24px;
+  padding:22px 40px;
+  border-bottom:1px solid var(--border);
+  cursor:none;transition:background .22s;
+  position:relative;
+}
+.track-row:last-child{border-bottom:none}
+.track-row:hover{background:var(--bg3)}
+.track-row.active{background:var(--bg3)}
+.track-row.active .tr-num{color:var(--accent)}
+.tr-num{
+  font-family:var(--font-display);font-size:20px;
+  color:rgba(255,255,255,.15);width:28px;flex-shrink:0;
+  transition:color .2s;
+}
+.tr-info{flex:1;min-width:0}
+.tr-name{
+  font-family:var(--font-body);font-weight:700;font-size:15px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tr-sub{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--dim);letter-spacing:.14em;margin-top:3px;
+}
+.tr-dur{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--dim);flex-shrink:0;letter-spacing:.1em;
+}
+.tr-dl{
+  flex-shrink:0;
+  background:transparent;border:1px solid var(--border);
+  color:var(--dim);
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:8px 16px;cursor:none;
+  transition:color .22s,border-color .22s,background .22s;
+  display:flex;align-items:center;gap:7px;
+}
+.tr-dl:hover{color:var(--accent);border-color:rgba(200,255,0,.5);background:rgba(200,255,0,.04)}
+.tr-dl svg{width:12px;height:12px;flex-shrink:0}
+
+/* ─────────────────────────────────────────
+   CONTACT / DEMO
+───────────────────────────────────────── */
+#contact{border-top:1px solid var(--border)}
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  margin-top:56px;
+}
+.contact-panel{
+  background:var(--bg);
+  padding:64px 56px;
+}
+.contact-panel.right{background:var(--bg2)}
+.cp-title{
+  font-family:var(--font-display);
+  font-size:clamp(40px,5vw,64px);
+  line-height:.9;letter-spacing:-.01em;
+  margin-bottom:14px;
+}
+.cp-title .out{
+  -webkit-text-stroke:1px rgba(255,255,255,.2);color:transparent;
+}
+.cp-desc{
+  font-family:var(--font-mono);
+  font-size:12px;color:var(--dim);
+  line-height:1.85;margin-bottom:44px;max-width:340px;
+}
+
+/* form */
+.form-row{
+  margin-bottom:0;
+  border-bottom:1px solid var(--border);
+}
+.form-row:first-of-type{border-top:1px solid var(--border)}
+.form-row:focus-within{border-color:rgba(200,255,0,.45)}
+.form-label{
+  display:block;
+  font-family:var(--font-mono);font-size:9px;
+  letter-spacing:.32em;text-transform:uppercase;
+  color:var(--dim2);padding:18px 0 6px;
+  transition:color .25s;
+}
+.form-row:focus-within .form-label{color:var(--accent)}
+.form-input,.form-select,.form-textarea{
+  width:100%;background:transparent;
+  border:none;outline:none;
+  color:var(--white);
+  font-family:var(--font-body);font-size:17px;font-weight:600;
+  padding:4px 0 18px;cursor:none;
+  appearance:none;-webkit-appearance:none;
+}
+.form-input::placeholder,.form-textarea::placeholder{
+  color:rgba(255,255,255,.12);font-weight:400;
+}
+.form-textarea{resize:none;height:88px;line-height:1.5}
+.form-select{color:var(--dim)}
+.form-select option{background:#111;color:var(--white)}
+.form-submit{
+  margin-top:32px;width:100%;
+  background:var(--accent);color:#000;border:none;
+  padding:22px 40px;cursor:none;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--font-display);font-size:28px;letter-spacing:.08em;
+  transition:filter .2s,transform .2s;
+}
+.form-submit:hover{filter:brightness(1.07);transform:translateY(-2px)}
+.form-submit .sym{font-size:22px}
+.form-success{
+  display:none;
+  text-align:center;padding:48px 0;
+}
+.form-success-icon{
+  font-size:48px;color:var(--accent);margin-bottom:18px;
+}
+.form-success h3{
+  font-family:var(--font-display);font-size:36px;
+  letter-spacing:.06em;margin-bottom:10px;
+}
+.form-success p{
+  font-family:var(--font-mono);font-size:12px;
+  color:var(--dim);line-height:1.7;
+}
+
+/* ─────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────── */
+footer{
+  padding:44px 52px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.foot-logo{
+  font-family:var(--font-display);font-size:26px;letter-spacing:.12em;
+}
+.foot-info{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--dim);text-align:center;letter-spacing:.14em;line-height:1.9;
+}
+.foot-links{display:flex;gap:22px}
+.foot-links a{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--dim);text-decoration:none;cursor:none;
+  letter-spacing:.18em;transition:color .22s;
+}
+.foot-links a:hover{color:var(--accent)}
+
+/* ─────────────────────────────────────────
+   BOTTOM MARQUEE
+───────────────────────────────────────── */
+.btm-marquee{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--accent);overflow:hidden;
+  padding:9px 0;z-index:400;
+  border-top:1px solid rgba(200,255,0,.3);
+}
+.btm-inner{
+  display:flex;
+  animation:tickerRun 30s linear infinite;
+  white-space:nowrap;will-change:transform;
+}
+.btm-inner:hover{animation-play-state:paused}
+.btm-item{
+  font-family:var(--font-display);
+  font-size:13px;letter-spacing:.28em;
+  color:#000;padding:0 52px;flex-shrink:0;
+}
+body{padding-bottom:42px}
+
+/* ─────────────────────────────────────────
+   KEYFRAMES MISC
+───────────────────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeIn{
+  from{opacity:0}to{opacity:1}
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media(max-width:900px){
+  #nav{padding:18px 24px}
+  .nav-links{display:none}
+  section{padding:88px 24px}
+  #hero{padding:0 24px 60px}
+  .about-body{column-count:1}
+  .about-grid{grid-template-columns:1fr}
+  .about-stat-row{grid-template-columns:repeat(2,1fr)}
+  .roster-grid{grid-template-columns:1fr}
+  .epk-block{grid-template-columns:1fr}
+  .player-wrap{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:22px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-brand">AGM Music Group</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#roster">Roster</a></li>
+    <li><a href="#music">Music</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Submit Demo</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-fx" id="hero-fx">
+    <div class="glow-blob c"></div>
+    <div class="glow-blob l"></div>
+    <div class="glow-blob r"></div>
+    <div class="flash-l"></div>
+    <div class="hero-vig"></div>
+  </div>
+  <div class="hero-bg-word">AGMMG</div>
+
+  <div class="hero-eyebrow">United States &amp; Israel — Est. 2026</div>
+
+  <h1 class="hero-title">
+    AGM<br>
+    <span class="out">MUSIC</span><br>
+    <span class="acc">GROUP</span>
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="hero-sub">
+      An <strong>elite music agency</strong> and <strong>independent record label</strong> — bridging local talent with global distribution, world-class management, and aggressive marketing strategy.
+    </p>
+    <div class="hero-actions">
+      <a href="#roster" class="btn-ghost">Our Roster</a>
+      <a href="#music" class="btn-primary">Listen Now ↓</a>
+    </div>
+  </div>
+
+  <div class="scroll-ind">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="t-item">AGM MUSIC GROUP</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">DISTRIBUTION</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">MANAGEMENT</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">JULIEN NOBLMAN</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">JDYHR</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">PROMOTION</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">US &amp; ISRAEL</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">BOUTIQUE LABEL</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">AGM MUSIC GROUP</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">DISTRIBUTION</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">MANAGEMENT</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">JULIEN NOBLMAN</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">JDYHR</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">PROMOTION</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">US &amp; ISRAEL</span>
+    <span class="t-item">◆</span>
+    <span class="t-item">BOUTIQUE LABEL</span>
+    <span class="t-item">◆</span>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="s-label reveal">001 — Who We Are</div>
+
+  <div class="about-grid">
+    <div class="about-main reveal">
+      <h2 class="about-headline">
+        WE BUILD<br>
+        <span class="out">CAREERS,</span><br>
+        NOT JUST RELEASES.
+      </h2>
+      <div class="about-body">
+        <p>AGM Music Group was founded on a singular conviction: extraordinary artists deserve extraordinary representation. We are a boutique music agency and independent record label operating at the intersection of creative vision and commercial precision — where raw talent meets strategic infrastructure.</p>
+        <p>Our model is deliberately focused. We partner with a carefully curated roster, ensuring every artist receives the full weight of our attention, resources, and relationships. We don't spread thin — we go deep. From the first demo to global distribution, our team is embedded in every decision.</p>
+        <p>We operate across borders. Headquartered between the United States and Israel, our network spans major streaming platforms, sync licensing opportunities, playlist editorial relationships, and press infrastructure across three continents. When we release music, the world hears it.</p>
+        <p>Audio engineering and production quality are non-negotiable pillars of our process. Every track that exits our pipeline has been through rigorous A&amp;R review, professional mixing and mastering, and strategic metadata optimization for algorithmic discovery. We deliver pristine sound to pristine ears.</p>
+      </div>
+    </div>
+
+    <div class="about-pillars reveal reveal-d1">
+      <div class="pillar">
+        <div class="pillar-n">01</div>
+        <div class="pillar-title">Artist Empowerment</div>
+        <div class="pillar-desc">We believe artists should own their narrative. Our contracts are transparent, our splits are fair, and our doors are always open. Real partnership, not extraction.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-n">02</div>
+        <div class="pillar-title">Digital Distribution</div>
+        <div class="pillar-desc">Spotify, Apple Music, Tidal, Amazon, YouTube Music — everywhere simultaneously. Pitch-perfect metadata, optimized release cadence, global reach on day one.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-n">03</div>
+        <div class="pillar-title">Aggressive Marketing</div>
+        <div class="pillar-desc">Editorial playlist pitching, influencer seeding, press coverage, social strategy. We don't wait for the algorithm — we engineer the moment.</div>
+      </div>
+    </div>
+
+    <div class="about-stat-row reveal reveal-d2">
+      <div class="stat-block">
+        <div class="stat-num">2+</div>
+        <div class="stat-label">Artists Signed</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Creative Ceiling</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Countries</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Artist-First</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROSTER ── -->
+<section id="roster">
+  <div class="s-label reveal">002 — The Roster</div>
+
+  <div class="roster-head reveal">
+    <h2 class="roster-title">
+      OUR<br>
+      <span class="out">TALENT</span>
+    </h2>
+    <div class="roster-meta">02 / ∞ Active Artists</div>
+  </div>
+
+  <div class="roster-grid reveal reveal-d1">
+
+    <!-- JULIEN NOBLMAN -->
+    <div class="a-card">
+      <div class="a-img julien"></div>
+      <div class="a-num">01</div>
+      <div class="a-init">JN</div>
+      <div class="a-grad"></div>
+      <div class="a-overlay"></div>
+      <div class="a-content">
+        <div class="a-role">Lead Artist</div>
+        <div class="a-name">JULIEN NOBLMAN</div>
+        <div class="a-tags">
+          <span class="tag">Hip-Hop</span>
+          <span class="tag">Rap</span>
+        </div>
+        <div class="a-links">
+          <a href="#" class="a-link">Spotify</a>
+          <a href="#" class="a-link">Apple Music</a>
+          <a href="#" class="a-link">Instagram</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- JDYHR -->
+    <div class="a-card">
+      <div class="a-img jdyhr"></div>
+      <div class="a-num">02</div>
+      <div class="a-init">JD</div>
+      <div class="a-grad"></div>
+      <div class="a-overlay"></div>
+      <div class="a-content">
+        <div class="a-role">Producer / Artist</div>
+        <div class="a-name">JDYHR</div>
+        <div class="a-tags">
+          <span class="tag">Trap</span>
+          <span class="tag">Beats</span>
+          <span class="tag">Party</span>
+        </div>
+        <div class="a-links">
+          <a href="#" class="a-link">Spotify</a>
+          <a href="#" class="a-link">YouTube</a>
+          <a href="#" class="a-link">Instagram</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLACEHOLDER -->
+    <div class="a-card ph">
+      <div class="ph-inner">
+        <div class="ph-icon">◈</div>
+        <div class="ph-text">Next Up</div>
+        <div class="ph-sub">Coming Soon</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EPK / INFO BLOCKS -->
+  <div class="epk-block reveal reveal-d2">
+    <div class="epk-card">
+      <div class="epk-num">A</div>
+      <div class="epk-arrow">↗</div>
+      <div class="epk-title">Press Kit</div>
+      <div class="epk-body">Official EPK available on request. Full biography, professional photography, rider, and promotional assets for media and event bookings.</div>
+    </div>
+    <div class="epk-card">
+      <div class="epk-num">B</div>
+      <div class="epk-arrow">↗</div>
+      <div class="epk-title">Bookings</div>
+      <div class="epk-body">For live performance, DJ sets, and special event bookings, contact our management team directly. Available for national and international dates.</div>
+    </div>
+    <div class="epk-card">
+      <div class="epk-num">C</div>
+      <div class="epk-arrow">↗</div>
+      <div class="epk-title">Sync Licensing</div>
+      <div class="epk-body">Our catalog is available for film, TV, advertising, and game placements. Reach out to our licensing department for clearance and rates.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MUSIC PLAYER ── -->
+<section id="music">
+  <div class="s-label reveal">003 — Music</div>
+
+  <div class="player-wrap reveal reveal-d1" id="player-wrap">
+
+    <!-- Art panel -->
+    <div class="player-art" id="player-art">
+      <div class="player-art-bg"></div>
+      <div class="vinyl-ring r3"></div>
+      <div class="vinyl-ring r2"></div>
+      <div class="vinyl-ring r1"></div>
+      <div class="player-art-letter" id="art-letter">JN</div>
+      <div class="player-badge" id="now-badge">Now Playing</div>
+      <div class="player-waveform">
+        <div class="player-bar"></div>
+        <div class="player-bar"></div>
+        <div class="player-bar"></div>
+        <div class="player-bar"></div>
+        <div class="player-bar"></div>
+        <div class="player-bar"></div>
+      </div>
+    </div>
+
+    <!-- Controls panel -->
+    <div class="player-controls">
+      <div class="track-meta">
+        <div class="track-artist" id="track-artist">Julien Noblman</div>
+        <div class="track-name" id="track-name">BUST DOWN</div>
+        <div class="track-detail" id="track-detail">AGM Music Group · 2026</div>
+      </div>
+
+      <div class="prog-wrap">
+        <div class="prog-bar" id="prog-bar">
+          <div class="prog-fill" id="prog-fill"></div>
+        </div>
+        <div class="prog-times">
+          <span id="cur-time">0:00</span>
+          <span id="dur-time">0:00</span>
+        </div>
+      </div>
+
+      <div class="ctrl-row">
+        <!-- Prev -->
+        <button class="ctrl-btn" id="btn-prev" aria-label="Previous">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+        </button>
+        <!-- Play/Pause -->
+        <button class="ctrl-play" id="btn-play" aria-label="Play">
+          <svg id="play-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <!-- Next -->
+        <button class="ctrl-btn" id="btn-next" aria-label="Next">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zm-3.5 6L4 6v12z"/></svg>
+        </button>
+        <!-- Volume label -->
+        <div class="vol-row" style="flex:1;margin-top:0">
+          <span class="vol-icon">VOL</span>
+          <div class="vol-bar" id="vol-bar">
+            <div class="vol-fill" id="vol-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <audio id="audio" preload="metadata"></audio>
+    </div>
+  </div>
+
+  <!-- Track list -->
+  <div class="track-list reveal reveal-d2" id="track-list"></div>
+</section>
+
+<!-- ── CONTACT & DEMO ── -->
+<section id="contact">
+  <div class="s-label reveal">004 — Contact &amp; Demo</div>
+
+  <div class="contact-grid">
+
+    <!-- Business Inquiry -->
+    <div class="contact-panel reveal">
+      <h2 class="cp-title">
+        BUSINESS<br>
+        <span class="out">INQUIRY</span>
+      </h2>
+      <p class="cp-desc">Management, licensing, brand partnerships, and media requests. Our team responds within 3–5 business days.</p>
+
+      <form id="biz-form" novalidate>
+        <div class="form-row">
+          <label class="form-label" for="biz-name">Your Name</label>
+          <input class="form-input" id="biz-name" type="text" placeholder="Full name" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="biz-email">Email Address</label>
+          <input class="form-input" id="biz-email" type="email" placeholder="your@email.com" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="biz-subject">Subject</label>
+          <input class="form-input" id="biz-subject" type="text" placeholder="e.g. Licensing inquiry" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="biz-msg">Message</label>
+          <textarea class="form-textarea form-input" id="biz-msg" placeholder="Tell us about your project..." required></textarea>
+        </div>
+        <button type="submit" class="form-submit">
+          <span>SEND MESSAGE</span>
+          <span class="sym">✦</span>
+        </button>
+        <div class="form-success" id="biz-success">
+          <div class="form-success-icon">✦</div>
+          <h3>MESSAGE RECEIVED</h3>
+          <p>We'll review your inquiry and get back to you within 3–5 business days.</p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Demo Submission -->
+    <div class="contact-panel right reveal reveal-d1">
+      <h2 class="cp-title">
+        SUBMIT<br>
+        <span class="out">YOUR</span><br>
+        DEMO.
+      </h2>
+      <p class="cp-desc">Think you belong on our roster? Send us your best work. We listen to everything that comes through here.</p>
+
+      <form id="demo-form" novalidate>
+        <div class="form-row">
+          <label class="form-label" for="dm-name">Artist Name</label>
+          <input class="form-input" id="dm-name" type="text" placeholder="Your stage name" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="dm-email">Email Address</label>
+          <input class="form-input" id="dm-email" type="email" placeholder="your@email.com" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="dm-genre">Genre</label>
+          <select class="form-input form-select" id="dm-genre" required>
+            <option value="" disabled selected>Select your genre</option>
+            <option value="Hip-Hop / Rap">Hip-Hop / Rap</option>
+            <option value="Trap / Beats">Trap / Beats</option>
+            <option value="R&B / Soul">R&amp;B / Soul</option>
+            <option value="Pop">Pop</option>
+            <option value="Electronic / Dance">Electronic / Dance</option>
+            <option value="Afrobeats">Afrobeats</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="dm-link">Track Link</label>
+          <input class="form-input" id="dm-link" type="url" placeholder="SoundCloud / Spotify / YouTube URL" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="dm-about">About Your Sound</label>
+          <input class="form-input" id="dm-about" type="text" placeholder="Influences, vision, goals..." autocomplete="off">
+        </div>
+        <button type="submit" class="form-submit">
+          <span>SEND DEMO</span>
+          <span class="sym">→</span>
+        </button>
+        <div class="form-success" id="demo-success">
+          <div class="form-success-icon">✦</div>
+          <h3>DEMO RECEIVED</h3>
+          <p>Our A&amp;R team will review your submission. If it's the right fit, we'll reach out directly.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">AGMMG</div>
+  <div class="foot-info">
+    © 2026 AGM MUSIC GROUP<br>
+    UNITED STATES &amp; ISRAEL
+  </div>
+  <nav class="foot-links">
+    <a href="#about">About</a>
+    <a href="#roster">Roster</a>
+    <a href="#music">Music</a>
+    <a href="mailto:yoavagami0@gmail.com">Contact</a>
+  </nav>
+</footer>
+
+<!-- BOTTOM MARQUEE -->
+<div class="btm-marquee">
+  <div class="btm-inner">
+    <span class="btm-item">AGM MUSIC GROUP</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">JULIEN NOBLMAN — BUST DOWN OUT NOW</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">JDYHR — TRAP BEATS</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">US &amp; ISRAEL BASED BOUTIQUE LABEL</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">SUBMIT YOUR DEMO</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">AGM MUSIC GROUP</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">JULIEN NOBLMAN — BUST DOWN OUT NOW</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">JDYHR — TRAP BEATS</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">US &amp; ISRAEL BASED BOUTIQUE LABEL</span>
+    <span class="btm-item">◆</span>
+    <span class="btm-item">SUBMIT YOUR DEMO</span>
+    <span class="btm-item">◆</span>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ─────────────────────────────────────────
+   CURSOR — RAF-driven, never causes layout
+───────────────────────────────────────── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+
+document.addEventListener('mousemove', e=>{
+  mx = e.clientX; my = e.clientY;
+},{passive:true});
+
+document.addEventListener('mousedown',()=>document.body.classList.add('cursor-click'),{passive:true});
+document.addEventListener('mouseup',()=>document.body.classList.remove('cursor-click'),{passive:true});
+
+function tickCursor(){
+  cur.style.left  = mx+'px';
+  cur.style.top   = my+'px';
+  rx += (mx-rx)*.12;
+  ry += (my-ry)*.12;
+  ring.style.left = rx+'px';
+  ring.style.top  = ry+'px';
+  requestAnimationFrame(tickCursor);
+}
+requestAnimationFrame(tickCursor);
+
+const hoverEls = document.querySelectorAll('a,button,.a-card:not(.ph),.track-row,.stat-block,.epk-card');
+hoverEls.forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'),{passive:true});
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'),{passive:true});
+});
+
+/* ─────────────────────────────────────────
+   NAV SCROLL STATE
+───────────────────────────────────────── */
+const nav = document.getElementById('nav');
+let lastY=0,ticking=false;
+window.addEventListener('scroll',()=>{
+  lastY = window.scrollY;
+  if(!ticking){
+    requestAnimationFrame(()=>{
+      nav.classList.toggle('scrolled', lastY>40);
+      ticking=false;
+    });
+    ticking=true;
+  }
+},{passive:true});
+
+/* ─────────────────────────────────────────
+   HERO GLOW SCROLL FADE
+───────────────────────────────────────── */
+const heroFx = document.getElementById('hero-fx');
+const heroEl = document.getElementById('hero');
+window.addEventListener('scroll',()=>{
+  const h = heroEl.offsetHeight;
+  const p = Math.min(window.scrollY/(h*.6),1);
+  heroFx.style.opacity = 1-p;
+},{passive:true});
+
+/* ─────────────────────────────────────────
+   SCROLL REVEAL — IntersectionObserver
+───────────────────────────────────────── */
+const revealObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      revealObs.unobserve(e.target);
+    }
+  });
+},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+/* ─────────────────────────────────────────
+   SMOOTH SCROLL NAV
+───────────────────────────────────────── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id = a.getAttribute('href');
+    const target = document.querySelector(id);
+    if(target){
+      e.preventDefault();
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  });
+});
+
+/* ─────────────────────────────────────────
+   MUSIC PLAYER
+───────────────────────────────────────── */
+const TRACKS = [
+  {
+    id:0,
+    title:'BUST DOWN',
+    artist:'Julien Noblman',
+    label:'AGM Music Group · 2026',
+    letter:'JN',
+    dur:'3:24',
+    // Replace src values with real hosted file URLs.
+    // For demo purposes the src is left empty so no 404 is thrown.
+    src:'',
+    dl:''
+  },
+  {
+    id:1,
+    title:'TRAP SESSION',
+    artist:'JDYHR',
+    label:'AGM Music Group · 2026',
+    letter:'JD',
+    dur:'2:58',
+    src:'',
+    dl:''
+  },
+  {
+    id:2,
+    title:'NIGHT RUN',
+    artist:'JDYHR',
+    label:'AGM Music Group · 2026',
+    letter:'JD',
+    dur:'3:11',
+    src:'',
+    dl:''
+  }
+];
+
+const audio       = document.getElementById('audio');
+const btnPlay     = document.getElementById('btn-play');
+const btnPrev     = document.getElementById('btn-prev');
+const btnNext     = document.getElementById('btn-next');
+const progBar     = document.getElementById('prog-bar');
+const progFill    = document.getElementById('prog-fill');
+const curTime     = document.getElementById('cur-time');
+const durTime     = document.getElementById('dur-time');
+const volBar      = document.getElementById('vol-bar');
+const volFill     = document.getElementById('vol-fill');
+const trackName   = document.getElementById('track-name');
+const trackArtist = document.getElementById('track-artist');
+const trackDetail = document.getElementById('track-detail');
+const artLetter   = document.getElementById('art-letter');
+const playerWrap  = document.getElementById('player-wrap');
+const trackList   = document.getElementById('track-list');
+
+let curIdx = 0;
+let playing = false;
+
+const playIcon = `<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+const pauseIcon= `<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>`;
+
+function fmtTime(s){
+  if(isNaN(s)) return '0:00';
+  const m=Math.floor(s/60), sec=Math.floor(s%60);
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
+function loadTrack(idx){
+  const t = TRACKS[idx];
+  curIdx = idx;
+  audio.src = t.src;
+  trackName.textContent   = t.title;
+  trackArtist.textContent = t.artist;
+  trackDetail.textContent = t.label;
+  artLetter.textContent   = t.letter;
+  progFill.style.width    = '0%';
+  curTime.textContent     = '0:00';
+  durTime.textContent     = t.dur;
+  highlightTrack(idx);
+}
+
+function highlightTrack(idx){
+  document.querySelectorAll('.track-row').forEach((r,i)=>{
+    r.classList.toggle('active',i===idx);
+  });
+}
+
+function togglePlay(){
+  if(playing){
+    audio.pause();
+    playing=false;
+    btnPlay.innerHTML = playIcon;
+    playerWrap.classList.remove('player-playing');
+  } else {
+    if(audio.src && audio.src!==window.location.href){
+      audio.play().catch(()=>{});
+    }
+    playing=true;
+    btnPlay.innerHTML = pauseIcon;
+    playerWrap.classList.add('player-playing');
+  }
+}
+
+btnPlay.addEventListener('click', togglePlay);
+btnPrev.addEventListener('click',()=>{
+  loadTrack((curIdx-1+TRACKS.length)%TRACKS.length);
+  if(playing) audio.play().catch(()=>{});
+});
+btnNext.addEventListener('click',()=>{
+  loadTrack((curIdx+1)%TRACKS.length);
+  if(playing) audio.play().catch(()=>{});
+});
+
+audio.addEventListener('timeupdate',()=>{
+  if(!audio.duration) return;
+  const p = (audio.currentTime/audio.duration)*100;
+  progFill.style.width = p+'%';
+  curTime.textContent  = fmtTime(audio.currentTime);
+},{passive:true});
+
+audio.addEventListener('loadedmetadata',()=>{
+  durTime.textContent = fmtTime(audio.duration);
+});
+
+audio.addEventListener('ended',()=>{
+  loadTrack((curIdx+1)%TRACKS.length);
+  audio.play().catch(()=>{});
+});
+
+/* progress bar seek */
+progBar.addEventListener('click',e=>{
+  if(!audio.duration) return;
+  const rect = progBar.getBoundingClientRect();
+  const frac = (e.clientX-rect.left)/rect.width;
+  audio.currentTime = frac*audio.duration;
+});
+
+/* volume bar */
+volBar.addEventListener('click',e=>{
+  const rect = volBar.getBoundingClientRect();
+  const v = Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+  audio.volume = v;
+  volFill.style.width = (v*100)+'%';
+});
+
+/* ── BUILD TRACK LIST ── */
+TRACKS.forEach((t,i)=>{
+  const row = document.createElement('div');
+  row.className = 'track-row'+(i===0?' active':'');
+  row.innerHTML = `
+    <div class="tr-num">${String(i+1).padStart(2,'0')}</div>
+    <div class="tr-info">
+      <div class="tr-name">${t.title}</div>
+      <div class="tr-sub">${t.artist}</div>
+    </div>
+    <div class="tr-dur">${t.dur}</div>
+    <button class="tr-dl" data-idx="${i}" aria-label="Download ${t.title}">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/></svg>
+      DL
+    </button>`;
+
+  /* click row to load & play */
+  row.addEventListener('click', e=>{
+    if(e.target.closest('.tr-dl')) return;
+    if(curIdx!==i) loadTrack(i);
+    if(!playing){
+      playing=true;
+      btnPlay.innerHTML=pauseIcon;
+      playerWrap.classList.add('player-playing');
+    }
+    if(audio.src && audio.src!==window.location.href) audio.play().catch(()=>{});
+  });
+
+  trackList.appendChild(row);
+});
+
+/* ── NON-BLOCKING DOWNLOAD ── */
+/* Uses fetch + createObjectURL so the file downloads asynchronously
+   without interrupting the audio player or causing any UI stutter.
+   Audio playback is completely unaffected. */
+trackList.addEventListener('click', e=>{
+  const dlBtn = e.target.closest('.tr-dl');
+  if(!dlBtn) return;
+  e.stopPropagation();
+
+  const idx = parseInt(dlBtn.dataset.idx, 10);
+  const track = TRACKS[idx];
+  const url = track.dl || track.src;
+
+  if(!url){
+    dlBtn.textContent='N/A';
+    return;
+  }
+
+  const origHTML = dlBtn.innerHTML;
+  dlBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg> ...';
+  dlBtn.disabled=true;
+
+  /* fire-and-forget: never await in click handler */
+  (async()=>{
+    try{
+      const resp = await fetch(url,{mode:'cors'});
+      if(!resp.ok) throw new Error('fetch failed');
+      const blob = await resp.blob();
+      const burl = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = burl;
+      a.download = track.title.replace(/\s+/g,'_')+'.mp3';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{
+        URL.revokeObjectURL(burl);
+        document.body.removeChild(a);
+      },200);
+      dlBtn.innerHTML = '✓ DONE';
+    } catch(_){
+      dlBtn.innerHTML = 'ERR';
+    } finally{
+      setTimeout(()=>{
+        dlBtn.innerHTML  = origHTML;
+        dlBtn.disabled   = false;
+      }, 2800);
+    }
+  })();
+});
+
+loadTrack(0);
+
+/* ─────────────────────────────────────────
+   FORMS
+───────────────────────────────────────── */
+function handleForm(formId, successId, extraFields){
+  const form    = document.getElementById(formId);
+  const success = document.getElementById(successId);
+  if(!form) return;
+
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    const name  = form.querySelector('[type="text"]')?.value.trim();
+    const email = form.querySelector('[type="email"]')?.value.trim();
+    if(!name||!email) return;
+
+    const subject = encodeURIComponent(`AGM — ${formId==='demo-form'?'Demo Submission':'Inquiry'} from ${name}`);
+    const bodyLines = [`Name: ${name}`,`Email: ${email}`];
+    (extraFields||[]).forEach(id=>{
+      const el=form.querySelector('#'+id);
+      if(el&&el.value) bodyLines.push(`${el.dataset.label||id}: ${el.value}`);
+    });
+    const body = encodeURIComponent(bodyLines.join('\n'));
+
+    window.location.href=`mailto:yoavagami0@gmail.com?subject=${subject}&body=${body}`;
+
+    form.style.display='none';
+    success.style.display='block';
+    setTimeout(()=>{form.style.display='block';success.style.display='none';form.reset();},6000);
+  });
+}
+
+handleForm('biz-form','biz-success',['biz-subject','biz-msg']);
+handleForm('demo-form','demo-success',['dm-genre','dm-link','dm-about']);
+
+/* ─────────────────────────────────────────
+   PROG BAR DRAG
+───────────────────────────────────────── */
+let dragging=false;
+progBar.addEventListener('mousedown',()=>dragging=true);
+window.addEventListener('mouseup',()=>dragging=false);
+window.addEventListener('mousemove',e=>{
+  if(!dragging||!audio.duration) return;
+  const rect=progBar.getBoundingClientRect();
+  const frac=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+  audio.currentTime=frac*audio.duration;
+},{passive:true});
+
+})(); // end IIFE
+</script>
+</body>
+</html>
