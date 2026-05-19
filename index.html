@@ -1885,7 +1885,7 @@ async function submitToWeb3Forms(formId, successId, submitId, fromLabel){
     const nameVal  = nameEl?.value.trim()||'';
     const emailVal = emailEl?.value.trim()||'';
     /* RFC-5322-inspired regex — catches missing @, bad domain, no TLD, etc. */
-    const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    const EMAIL_RE = /^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/;
 
     if(!nameVal){ shakeInvalid(nameEl); return; }
     if(!emailVal||!EMAIL_RE.test(emailVal)){
