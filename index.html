@@ -948,6 +948,109 @@ section{padding:128px 52px}
 }
 .form-submit.loading .btn-spinner{display:block}
 .form-submit.loading .btn-text{opacity:.55}
+/* ─────────────────────────────────────────
+   OTP VERIFICATION UI
+───────────────────────────────────────── */
+.otp-stage{
+  display:none;
+  flex-direction:column;
+  gap:0;
+  margin-top:0;
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity .5s cubic-bezier(0.16,1,0.3,1),transform .5s cubic-bezier(0.16,1,0.3,1);
+}
+.otp-stage.visible{opacity:1;transform:translateY(0)}
+.otp-header{
+  padding:24px 0 20px;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.otp-label{
+  font-family:var(--font-mono);font-size:9px;
+  letter-spacing:.32em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:8px;
+}
+.otp-desc{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--dim);line-height:1.7;letter-spacing:.06em;
+}
+.otp-desc strong{color:rgba(255,255,255,.7);font-weight:400}
+.otp-input-row{
+  display:flex;gap:8px;padding:24px 0;
+  border-bottom:1px solid var(--border);
+}
+.otp-digit{
+  flex:1;text-align:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  color:var(--white);
+  font-family:var(--font-display);font-size:28px;
+  padding:18px 0;
+  outline:none;cursor:none;
+  transition:border-color .2s,background .2s;
+  -moz-appearance:textfield;
+}
+.otp-digit::-webkit-outer-spin-button,
+.otp-digit::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.otp-digit:focus{
+  border-color:rgba(200,255,0,.6);
+  background:rgba(200,255,0,.04);
+}
+.otp-digit.filled{border-color:rgba(200,255,0,.35)}
+.otp-digit.error{border-color:rgba(255,80,80,.6);background:rgba(255,80,80,.04)}
+.otp-actions{
+  display:flex;gap:10px;padding-top:20px;
+  flex-wrap:wrap;
+}
+.otp-verify{
+  flex:1;
+  background:var(--accent);color:#000;border:none;
+  padding:18px 24px;cursor:none;
+  font-family:var(--font-display);font-size:22px;letter-spacing:.08em;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:filter .2s,transform .2s;
+}
+.otp-verify:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.otp-verify.loading{pointer-events:none;opacity:.6}
+.otp-verify .btn-spinner{
+  display:none;width:16px;height:16px;
+  border:2px solid rgba(0,0,0,.3);border-top-color:#000;
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+.otp-verify.loading .btn-spinner{display:block}
+.otp-resend{
+  background:transparent;color:var(--dim);border:1px solid var(--border);
+  padding:18px 20px;cursor:none;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  transition:color .2s,border-color .2s;white-space:nowrap;
+}
+.otp-resend:hover{color:var(--white);border-color:var(--border2)}
+.otp-resend:disabled{opacity:.35;pointer-events:none}
+.otp-timer{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--dim);letter-spacing:.18em;
+  padding-top:10px;text-align:right;
+}
+.otp-timer span{color:var(--accent)}
+/* send-code button that replaces the main submit initially */
+.btn-send-code{
+  margin-top:32px;width:100%;
+  background:transparent;color:var(--white);border:1px solid var(--border2);
+  padding:22px 40px;cursor:none;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--font-display);font-size:28px;letter-spacing:.08em;
+  transition:border-color .25s,filter .2s,transform .2s;
+}
+.btn-send-code:hover{border-color:var(--accent);filter:brightness(1.05);transform:translateY(-2px)}
+.btn-send-code.loading{pointer-events:none;opacity:.6}
+.btn-send-code .btn-spinner{
+  display:none;width:18px;height:18px;
+  border:2px solid rgba(255,255,255,.2);border-top-color:var(--white);
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+.btn-send-code.loading .btn-spinner{display:block}
+
 
 /* ─────────────────────────────────────────
    FOOTER
@@ -1369,19 +1472,41 @@ body{padding-bottom:42px}
           <label class="form-label" for="biz-msg">Message</label>
           <textarea class="form-textarea form-input" id="biz-msg" name="message" placeholder="Tell us about your project..." required></textarea>
         </div>
-        <button type="submit" class="form-submit" id="biz-submit">
-          <span class="btn-text">SEND MESSAGE</span>
+        <button type="button" class="btn-send-code" id="biz-send-code">
+          <span class="btn-text">VERIFY &amp; SEND</span>
           <span class="btn-spinner"></span>
-          <span class="sym">✦</span>
+          <span class="sym">→</span>
         </button>
-        <div class="form-success" id="biz-success">
-          <div class="form-success-ring">
-            <div class="form-success-circle">✦</div>
+        <div class="otp-stage" id="biz-otp-stage">
+          <div class="otp-header">
+            <div class="otp-label">Email Verification</div>
+            <div class="otp-desc">We sent a 6-digit code to <strong id="biz-otp-email"></strong>.<br>Enter it below to confirm and send your message.</div>
           </div>
+          <div class="otp-input-row" id="biz-otp-row">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 1">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 2">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 3">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 4">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 5">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 6">
+          </div>
+          <div class="otp-actions">
+            <button type="button" class="otp-verify" id="biz-otp-verify">
+              <span class="btn-text">CONFIRM</span>
+              <span class="btn-spinner"></span>
+              <span>✦</span>
+            </button>
+            <button type="button" class="otp-resend" id="biz-otp-resend" disabled>RESEND</button>
+          </div>
+          <div class="otp-timer" id="biz-otp-timer">Resend available in <span>60</span>s</div>
+        </div>
+        <div class="form-success" id="biz-success">
+          <div class="form-success-ring"><div class="form-success-circle">✦</div></div>
           <h3>MESSAGE<br><span class="out">RECEIVED</span></h3>
           <div class="form-success-line"></div>
           <p>We'll review your inquiry and get back to you within 3–5 business days.</p>
         </div>
+
       </form>
     </div>
 
@@ -1425,19 +1550,41 @@ body{padding-bottom:42px}
           <label class="form-label" for="dm-about">About Your Sound</label>
           <input class="form-input" id="dm-about" name="about_sound" type="text" placeholder="Influences, vision, goals..." autocomplete="off">
         </div>
-        <button type="submit" class="form-submit" id="demo-submit">
-          <span class="btn-text">SEND DEMO</span>
+        <button type="button" class="btn-send-code" id="demo-send-code">
+          <span class="btn-text">VERIFY &amp; SEND</span>
           <span class="btn-spinner"></span>
           <span class="sym">→</span>
         </button>
-        <div class="form-success" id="demo-success">
-          <div class="form-success-ring">
-            <div class="form-success-circle">✦</div>
+        <div class="otp-stage" id="demo-otp-stage">
+          <div class="otp-header">
+            <div class="otp-label">Email Verification</div>
+            <div class="otp-desc">We sent a 6-digit code to <strong id="demo-otp-email"></strong>.<br>Enter it below to confirm and submit your demo.</div>
           </div>
+          <div class="otp-input-row" id="demo-otp-row">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 1">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 2">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 3">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 4">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 5">
+            <input class="otp-digit" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 6">
+          </div>
+          <div class="otp-actions">
+            <button type="button" class="otp-verify" id="demo-otp-verify">
+              <span class="btn-text">CONFIRM</span>
+              <span class="btn-spinner"></span>
+              <span>✦</span>
+            </button>
+            <button type="button" class="otp-resend" id="demo-otp-resend" disabled>RESEND</button>
+          </div>
+          <div class="otp-timer" id="demo-otp-timer">Resend available in <span>60</span>s</div>
+        </div>
+        <div class="form-success" id="demo-success">
+          <div class="form-success-ring"><div class="form-success-circle">✦</div></div>
           <h3>DEMO<br><span class="out">RECEIVED</span></h3>
           <div class="form-success-line"></div>
           <p>Our A&amp;R team will review your submission. If it's the right fit, we'll reach out directly.</p>
         </div>
+
       </form>
     </div>
   </div>
@@ -1802,33 +1949,25 @@ trackList.addEventListener('click', e=>{
 
 loadTrack(0);
 
-/* ─────────────────────────────────────────
-   FORMS — Web3Forms async (no page reload, no mailto)
-   Key: c1cbb0be-6523-4a99-9378-fe9f7d8c5784
-───────────────────────────────────────── */
-const W3F_KEY     = 'c1cbb0be-6523-4a99-9378-fe9f7d8c5784';
-const W3F_API     = 'https://api.web3forms.com/submit';
-const RESET_DELAY = 7000; // ms before form reappears after success
+/* ═══════════════════════════════════════════
+   FORMS — OTP Email Verification + Web3Forms
+   ═══════════════════════════════════════════
+   Flow:
+     1. User fills form → clicks "VERIFY & SEND"
+     2. JS validates fields + regex
+     3. Generates 6-digit OTP → sends via EmailJS
+     4. OTP UI slides in, user enters 6 digits
+     5. On match → Web3Forms submission → success state
+*/
+const W3F_KEY  = 'c1cbb0be-6523-4a99-9378-fe9f7d8c5784';
+const W3F_API  = 'https://api.web3forms.com/submit';
+const EJS_SVC  = 'service_ojhaf9m';
+const EJS_TPL  = 'template_i15a4jc';
+const EJS_PUB  = '0_1CGgMkkySdIn0Iv';
+const EMAIL_RE = /^[\w\-.]+@([\w\-]+\.)+[\w\-]{2,4}$/;
+const OTP_TTL  = 300; // seconds OTP stays valid
 
-function showSuccess(formEl, successEl, submitBtn){
-  /* hide form fields, show success panel */
-  Array.from(formEl.elements).forEach(el=>{ el.style.opacity='0'; el.style.pointerEvents='none'; });
-  submitBtn.style.display='none';
-  successEl.style.display='flex';
-  /* trigger CSS transition on next frame */
-  requestAnimationFrame(()=>requestAnimationFrame(()=>successEl.classList.add('visible')));
-  /* auto-reset */
-  setTimeout(()=>{
-    successEl.classList.remove('visible');
-    setTimeout(()=>{
-      successEl.style.display='none';
-      submitBtn.style.display='';
-      Array.from(formEl.elements).forEach(el=>{ el.style.opacity=''; el.style.pointerEvents=''; });
-      formEl.reset();
-    }, 600);
-  }, RESET_DELAY);
-}
-
+/* ── helpers ── */
 function shakeInvalid(el){
   el.style.animation='none';
   requestAnimationFrame(()=>{
@@ -1838,129 +1977,285 @@ function shakeInvalid(el){
 }
 
 function showFieldError(el, msg){
-  /* remove any existing error for this field */
-  const existing = el.closest('.form-row')?.querySelector('.field-err');
-  if(existing) existing.remove();
+  const row = el.closest('.form-row');
+  if(!row) return;
+  row.querySelectorAll('.field-err').forEach(e=>e.remove());
   const err = document.createElement('span');
-  err.className = 'field-err';
-  err.textContent = msg;
-  err.style.cssText = [
-    'display:block',
-    'font-family:var(--font-mono)',
-    'font-size:10px',
-    'letter-spacing:.18em',
-    'color:#ff6060',
-    'margin-top:6px',
-    'opacity:0',
-    'transform:translateY(-4px)',
-    'transition:opacity .3s var(--ease-out),transform .3s var(--ease-out)',
-  ].join(';');
-  el.closest('.form-row')?.appendChild(err);
-  /* trigger fade-in */
+  err.className='field-err';
+  err.textContent=msg;
+  Object.assign(err.style,{
+    display:'block',fontFamily:'var(--font-mono)',fontSize:'10px',
+    letterSpacing:'.18em',color:'#ff6060',marginTop:'6px',
+    opacity:'0',transform:'translateY(-4px)',
+    transition:'opacity .3s,transform .3s'
+  });
+  row.appendChild(err);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    err.style.opacity='1';
-    err.style.transform='translateY(0)';
+    err.style.opacity='1'; err.style.transform='translateY(0)';
   }));
-  /* auto-remove after user starts typing again */
-  el.addEventListener('input', ()=>{
+  el.addEventListener('input',()=>{
     err.style.opacity='0';
-    setTimeout(()=>err.remove(), 300);
+    setTimeout(()=>err.remove(),300);
   },{once:true});
-  /* also auto-remove after 5s */
-  setTimeout(()=>{ err.style.opacity='0'; setTimeout(()=>err.remove(),300); }, 5000);
+  setTimeout(()=>{ err.style.opacity='0'; setTimeout(()=>err.remove(),300); },6000);
 }
 
-async function submitToWeb3Forms(formId, successId, submitId, fromLabel){
-  const form      = document.getElementById(formId);
-  const successEl = document.getElementById(successId);
-  const submitBtn = document.getElementById(submitId);
-  if(!form||!successEl||!submitBtn) return;
+function showGenericError(btn, msg){
+  let el = btn.parentElement.querySelector('.form-err');
+  if(!el){
+    el=document.createElement('p'); el.className='form-err';
+    Object.assign(el.style,{fontFamily:'var(--font-mono)',fontSize:'11px',
+      color:'#ff6060',marginTop:'14px',letterSpacing:'.12em'});
+    btn.insertAdjacentElement('afterend',el);
+  }
+  el.textContent=msg;
+  setTimeout(()=>el.remove(),6000);
+}
 
-  form.addEventListener('submit', async e=>{
-    e.preventDefault();
+function showSuccess(formEl, successEl){
+  /* hide all form children */
+  Array.from(formEl.children).forEach(ch=>{ ch.style.opacity='0'; ch.style.pointerEvents='none'; });
+  successEl.style.display='flex';
+  successEl.style.opacity='0';
+  successEl.style.pointerEvents='';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>successEl.classList.add('visible')));
+  setTimeout(()=>{
+    successEl.classList.remove('visible');
+    setTimeout(()=>{
+      successEl.style.display='none';
+      Array.from(formEl.children).forEach(ch=>{ ch.style.opacity=''; ch.style.pointerEvents=''; });
+      formEl.reset();
+      /* reset OTP stage too */
+      formEl.querySelectorAll('.otp-stage').forEach(s=>{
+        s.style.display='none'; s.classList.remove('visible');
+      });
+      formEl.querySelectorAll('.btn-send-code').forEach(b=>{ b.style.display=''; b.style.opacity=''; b.style.pointerEvents=''; });
+    },600);
+  },7000);
+}
 
-    /* ── validation ── */
+/* ── OTP digit grid UX ── */
+function wireOtpDigits(rowEl){
+  const digits = Array.from(rowEl.querySelectorAll('.otp-digit'));
+  digits.forEach((d,i)=>{
+    d.addEventListener('input',()=>{
+      /* keep only last char, remove non-digits */
+      const v = d.value.replace(/\D/g,'');
+      d.value = v ? v[v.length-1] : '';
+      d.classList.toggle('filled', !!d.value);
+      if(d.value && i<digits.length-1) digits[i+1].focus();
+    });
+    d.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!d.value&&i>0){ digits[i-1].focus(); digits[i-1].value=''; digits[i-1].classList.remove('filled'); }
+      if(e.key==='ArrowLeft'&&i>0) digits[i-1].focus();
+      if(e.key==='ArrowRight'&&i<digits.length-1) digits[i+1].focus();
+    });
+    d.addEventListener('paste',e=>{
+      e.preventDefault();
+      const paste = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+      paste.split('').forEach((ch,j)=>{ if(digits[i+j]){ digits[i+j].value=ch; digits[i+j].classList.add('filled'); }});
+      const next = digits[Math.min(i+paste.length,digits.length-1)];
+      next.focus();
+    });
+  });
+}
+
+/* ── countdown timer ── */
+function startResendTimer(timerEl, resendBtn, seconds, onResend){
+  let remaining=seconds;
+  resendBtn.disabled=true;
+  const span = timerEl.querySelector('span');
+  const interval = setInterval(()=>{
+    remaining--;
+    if(span) span.textContent=remaining;
+    if(remaining<=0){
+      clearInterval(interval);
+      resendBtn.disabled=false;
+      timerEl.style.opacity='0';
+      resendBtn.addEventListener('click',()=>{
+        timerEl.style.opacity='1';
+        startResendTimer(timerEl,resendBtn,60,onResend);
+        onResend();
+      },{once:true});
+    }
+  },1000);
+}
+
+/* ── generate OTP & send via EmailJS ── */
+async function sendOtp(email, nameVal, fromLabel){
+  const code = String(Math.floor(100000+Math.random()*900000));
+  const params = {
+    to_email:  email,
+    to_name:   nameVal,
+    otp_code:  code,
+    from_label:fromLabel,
+    reply_to:  email
+  };
+  /* EmailJS SDK loaded via script tag */
+  await emailjs.send(EJS_SVC, EJS_TPL, params, EJS_PUB);
+  return code;
+}
+
+/* ── Web3Forms submit ── */
+async function submitW3F(form, nameVal, emailVal, fromLabel){
+  const payload = {
+    access_key: W3F_KEY,
+    subject:    'AGM — '+fromLabel+' from '+nameVal,
+    from_name:  'AGM Music Group Website',
+    botcheck:   form.querySelector('[name="botcheck"]')?.checked||false,
+    ...Object.fromEntries(
+      Array.from(form.elements)
+        .filter(el=>el.name&&el.value&&el.type!=='submit'&&el.name!=='botcheck'&&!el.closest('.otp-stage'))
+        .map(el=>[el.name,el.value])
+    )
+  };
+  const resp   = await fetch(W3F_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+  const result = await resp.json();
+  if(!result.success) throw new Error(result.message||'Submission failed');
+}
+
+/* ── wire up one form ── */
+function wireForm(cfg){
+  /*
+    cfg = {
+      formId, sendCodeBtnId, otpStageId, otpEmailLabelId,
+      otpRowId, otpVerifyId, otpResendId, otpTimerId,
+      successId, fromLabel
+    }
+  */
+  const form         = document.getElementById(cfg.formId);
+  const sendCodeBtn  = document.getElementById(cfg.sendCodeBtnId);
+  const otpStage     = document.getElementById(cfg.otpStageId);
+  const otpEmailLbl  = document.getElementById(cfg.otpEmailLabelId);
+  const otpRow       = document.getElementById(cfg.otpRowId);
+  const verifyBtn    = document.getElementById(cfg.otpVerifyId);
+  const resendBtn    = document.getElementById(cfg.otpResendId);
+  const timerEl      = document.getElementById(cfg.otpTimerId);
+  const successEl    = document.getElementById(cfg.successId);
+  if(!form||!sendCodeBtn||!otpStage) return;
+
+  wireOtpDigits(otpRow);
+
+  let currentOtp = null;
+  let otpExpiry  = 0;
+
+  /* helper: get & validate primary fields */
+  function getFields(){
     const nameEl  = form.querySelector('[type="text"]');
     const emailEl = form.querySelector('[type="email"]');
     const nameVal  = nameEl?.value.trim()||'';
     const emailVal = emailEl?.value.trim()||'';
-    /* RFC-5322-inspired regex — catches missing @, bad domain, no TLD, etc. */
-    const EMAIL_RE = /^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/;
+    if(!nameVal){ shakeInvalid(nameEl); return null; }
+    if(!emailVal||!EMAIL_RE.test(emailVal)){ shakeInvalid(emailEl); showFieldError(emailEl,'Please enter a valid email address'); return null; }
+    return {nameVal,emailVal,nameEl,emailEl};
+  }
 
-    if(!nameVal){ shakeInvalid(nameEl); return; }
-    if(!emailVal||!EMAIL_RE.test(emailVal)){
-      shakeInvalid(emailEl);
-      showFieldError(emailEl,'Please enter a valid email address');
+  /* ─ Step 1: Send Code ─ */
+  async function doSendCode(){
+    const fields=getFields(); if(!fields) return;
+    const {nameVal,emailVal}=fields;
+
+    sendCodeBtn.classList.add('loading');
+    try{
+      currentOtp = await sendOtp(emailVal, nameVal, cfg.fromLabel);
+      otpExpiry  = Date.now() + OTP_TTL*1000;
+
+      /* show OTP stage */
+      if(otpEmailLbl) otpEmailLbl.textContent=emailVal;
+      sendCodeBtn.style.display='none';
+      otpStage.style.display='flex';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>otpStage.classList.add('visible')));
+
+      /* focus first digit */
+      otpRow.querySelector('.otp-digit')?.focus();
+
+      /* start resend countdown */
+      startResendTimer(timerEl, resendBtn, 60, doSendCode);
+
+    } catch(err){
+      showGenericError(sendCodeBtn,'Failed to send code. Check your connection and try again.');
+      console.error('EmailJS error:',err);
+    } finally{
+      sendCodeBtn.classList.remove('loading');
+    }
+  }
+
+  sendCodeBtn.addEventListener('click', doSendCode);
+
+  /* ─ Step 2: Verify OTP ─ */
+  verifyBtn.addEventListener('click', async ()=>{
+    const digits = Array.from(otpRow.querySelectorAll('.otp-digit'));
+    const entered = digits.map(d=>d.value).join('');
+
+    /* check all filled */
+    if(entered.length<6){
+      digits.forEach(d=>{ if(!d.value){ d.classList.add('error'); setTimeout(()=>d.classList.remove('error'),800); }});
       return;
     }
 
-    /* loading state */
-    submitBtn.classList.add('loading');
+    /* check expiry */
+    if(Date.now()>otpExpiry){
+      digits.forEach(d=>d.classList.add('error'));
+      showGenericError(verifyBtn,'Code expired. Please request a new one.');
+      setTimeout(()=>digits.forEach(d=>d.classList.remove('error')),900);
+      return;
+    }
 
-    /* build payload — Web3Forms reads all keys in the JSON body */
-    const payload = {
-      access_key: W3F_KEY,
-      subject:    `AGM — ${fromLabel} from ${nameVal}`,
-      from_name:  'AGM Music Group Website',
-      botcheck:   form.querySelector('[name="botcheck"]')?.checked||false,
-      /* collect every named field automatically */
-      ...Object.fromEntries(
-        Array.from(form.elements)
-          .filter(el=>el.name&&el.value&&el.type!=='submit'&&el.name!=='botcheck')
-          .map(el=>[el.name, el.value])
-      )
-    };
+    /* check match */
+    if(entered!==currentOtp){
+      digits.forEach(d=>{ d.classList.add('error'); d.value=''; d.classList.remove('filled'); });
+      setTimeout(()=>{ digits.forEach(d=>d.classList.remove('error')); digits[0].focus(); },800);
+      showGenericError(verifyBtn,'Incorrect code. Please try again.');
+      return;
+    }
+
+    /* ✓ OTP correct — submit to Web3Forms */
+    verifyBtn.classList.add('loading');
+    const fields=getFields();
+    if(!fields){ verifyBtn.classList.remove('loading'); return; }
+    const {nameVal,emailVal}=fields;
 
     try{
-      const resp = await fetch(W3F_API, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','Accept':'application/json'},
-        body: JSON.stringify(payload)
-      });
-
-      const result = await resp.json();
-
-      if(result.success){
-        showSuccess(form, successEl, submitBtn);
-      } else {
-        /* Web3Forms returned an error — show inline message */
-        submitBtn.classList.remove('loading');
-        const errMsg = result.message||'Submission failed. Please try again.';
-        let errEl = form.querySelector('.form-err');
-        if(!errEl){
-          errEl = document.createElement('p');
-          errEl.className='form-err';
-          errEl.style.cssText='font-family:var(--font-mono);font-size:11px;color:#ff6b6b;margin-top:14px;letter-spacing:.12em;';
-          submitBtn.insertAdjacentElement('afterend', errEl);
-        }
-        errEl.textContent = errMsg;
-        setTimeout(()=>errEl.remove(), 5000);
-      }
-    } catch(networkErr){
-      submitBtn.classList.remove('loading');
-      let errEl = form.querySelector('.form-err');
-      if(!errEl){
-        errEl = document.createElement('p');
-        errEl.className='form-err';
-        errEl.style.cssText='font-family:var(--font-mono);font-size:11px;color:#ff6b6b;margin-top:14px;letter-spacing:.12em;';
-        submitBtn.insertAdjacentElement('afterend', errEl);
-      }
-      errEl.textContent='Network error. Please check your connection and try again.';
-      setTimeout(()=>errEl.remove(), 5000);
+      await submitW3F(form, nameVal, emailVal, cfg.fromLabel);
+      showSuccess(form, successEl);
+    } catch(err){
+      showGenericError(verifyBtn, err.message||'Submission failed. Please try again.');
     } finally{
-      submitBtn.classList.remove('loading');
+      verifyBtn.classList.remove('loading');
     }
   });
 }
 
-/* shake animation for invalid fields */
-const shakeStyle = document.createElement('style');
-shakeStyle.textContent='@keyframes shakeField{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}';
-document.head.appendChild(shakeStyle);
+/* ── inject EmailJS SDK then wire both forms ── */
+(function loadEmailJS(){
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  s.onload=()=>{
+    wireForm({
+      formId:'biz-form', sendCodeBtnId:'biz-send-code',
+      otpStageId:'biz-otp-stage', otpEmailLabelId:'biz-otp-email',
+      otpRowId:'biz-otp-row', otpVerifyId:'biz-otp-verify',
+      otpResendId:'biz-otp-resend', otpTimerId:'biz-otp-timer',
+      successId:'biz-success', fromLabel:'Business Inquiry'
+    });
+    wireForm({
+      formId:'demo-form', sendCodeBtnId:'demo-send-code',
+      otpStageId:'demo-otp-stage', otpEmailLabelId:'demo-otp-email',
+      otpRowId:'demo-otp-row', otpVerifyId:'demo-otp-verify',
+      otpResendId:'demo-otp-resend', otpTimerId:'demo-otp-timer',
+      successId:'demo-success', fromLabel:'Demo Submission'
+    });
+  };
+  s.onerror=()=>console.error('EmailJS SDK failed to load');
+  document.head.appendChild(s);
+})();
+
+/* shake keyframes injected once */
+const _sk=document.createElement('style');
+_sk.textContent='@keyframes shakeField{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}';
+document.head.appendChild(_sk);
 
 /* wire up both forms */
-submitToWeb3Forms('biz-form','biz-success','biz-submit','Business Inquiry');
-submitToWeb3Forms('demo-form','demo-success','demo-submit','Demo Submission');
 
 /* ─────────────────────────────────────────
    PROG BAR DRAG
