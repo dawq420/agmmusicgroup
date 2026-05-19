@@ -1352,6 +1352,7 @@ body{padding-bottom:42px}
       <p class="cp-desc">Management, licensing, brand partnerships, and media requests. Our team responds within 3–5 business days.</p>
 
       <form id="biz-form" novalidate>
+        <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
         <div class="form-row">
           <label class="form-label" for="biz-name">Your Name</label>
           <input class="form-input" id="biz-name" name="name" type="text" placeholder="Full name" required autocomplete="off">
@@ -1394,6 +1395,7 @@ body{padding-bottom:42px}
       <p class="cp-desc">Think you belong on our roster? Send us your best work. We listen to everything that comes through here.</p>
 
       <form id="demo-form" novalidate>
+        <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
         <div class="form-row">
           <label class="form-label" for="dm-name">Artist Name</label>
           <input class="form-input" id="dm-name" name="artist_name" type="text" placeholder="Your stage name" required autocomplete="off">
@@ -1835,6 +1837,39 @@ function shakeInvalid(el){
   });
 }
 
+function showFieldError(el, msg){
+  /* remove any existing error for this field */
+  const existing = el.closest('.form-row')?.querySelector('.field-err');
+  if(existing) existing.remove();
+  const err = document.createElement('span');
+  err.className = 'field-err';
+  err.textContent = msg;
+  err.style.cssText = [
+    'display:block',
+    'font-family:var(--font-mono)',
+    'font-size:10px',
+    'letter-spacing:.18em',
+    'color:#ff6060',
+    'margin-top:6px',
+    'opacity:0',
+    'transform:translateY(-4px)',
+    'transition:opacity .3s var(--ease-out),transform .3s var(--ease-out)',
+  ].join(';');
+  el.closest('.form-row')?.appendChild(err);
+  /* trigger fade-in */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    err.style.opacity='1';
+    err.style.transform='translateY(0)';
+  }));
+  /* auto-remove after user starts typing again */
+  el.addEventListener('input', ()=>{
+    err.style.opacity='0';
+    setTimeout(()=>err.remove(), 300);
+  },{once:true});
+  /* also auto-remove after 5s */
+  setTimeout(()=>{ err.style.opacity='0'; setTimeout(()=>err.remove(),300); }, 5000);
+}
+
 async function submitToWeb3Forms(formId, successId, submitId, fromLabel){
   const form      = document.getElementById(formId);
   const successEl = document.getElementById(successId);
@@ -1844,13 +1879,20 @@ async function submitToWeb3Forms(formId, successId, submitId, fromLabel){
   form.addEventListener('submit', async e=>{
     e.preventDefault();
 
-    /* basic validation */
+    /* ── validation ── */
     const nameEl  = form.querySelector('[type="text"]');
     const emailEl = form.querySelector('[type="email"]');
     const nameVal  = nameEl?.value.trim()||'';
     const emailVal = emailEl?.value.trim()||'';
+    /* RFC-5322-inspired regex — catches missing @, bad domain, no TLD, etc. */
+    const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
     if(!nameVal){ shakeInvalid(nameEl); return; }
-    if(!emailVal||!emailVal.includes('@')){ shakeInvalid(emailEl); return; }
+    if(!emailVal||!EMAIL_RE.test(emailVal)){
+      shakeInvalid(emailEl);
+      showFieldError(emailEl,'Please enter a valid email address');
+      return;
+    }
 
     /* loading state */
     submitBtn.classList.add('loading');
@@ -1860,10 +1902,11 @@ async function submitToWeb3Forms(formId, successId, submitId, fromLabel){
       access_key: W3F_KEY,
       subject:    `AGM — ${fromLabel} from ${nameVal}`,
       from_name:  'AGM Music Group Website',
+      botcheck:   form.querySelector('[name="botcheck"]')?.checked||false,
       /* collect every named field automatically */
       ...Object.fromEntries(
         Array.from(form.elements)
-          .filter(el=>el.name&&el.value&&el.type!=='submit')
+          .filter(el=>el.name&&el.value&&el.type!=='submit'&&el.name!=='botcheck')
           .map(el=>[el.name, el.value])
       )
     };
