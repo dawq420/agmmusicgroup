@@ -1111,6 +1111,7 @@ body{padding-bottom:42px}
 /* ─────────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────────── */
+/* ── TABLET (≤ 900px) ── */
 @media(max-width:900px){
   #nav{padding:18px 24px}
   .nav-links{display:none}
@@ -1124,6 +1125,126 @@ body{padding-bottom:42px}
   .player-wrap{grid-template-columns:1fr}
   .contact-grid{grid-template-columns:1fr}
   footer{flex-direction:column;gap:22px;text-align:center}
+}
+
+/* ── MOBILE (≤ 600px) ── */
+@media(max-width:600px){
+
+  /* global */
+  *{-webkit-tap-highlight-color:transparent}
+  body{cursor:auto}
+  #cur,#cur-ring{display:none}
+
+  /* nav */
+  #nav{padding:16px 20px}
+  .nav-brand{font-size:17px}
+  .nav-cta{display:none}
+
+  /* hero */
+  #hero{padding:0 20px 52px;min-height:100svh}
+  .hero-eyebrow{font-size:9px;letter-spacing:.22em;margin-bottom:16px}
+  .hero-title{font-size:clamp(60px,20vw,88px);margin-bottom:28px}
+  .hero-bottom{flex-direction:column;align-items:flex-start;gap:24px}
+  .hero-sub{font-size:12px;max-width:100%}
+  .hero-actions{width:100%;flex-direction:column;gap:10px}
+  .btn-primary,.btn-ghost{
+    width:100%;justify-content:center;
+    padding:16px 20px;font-size:11px;
+  }
+  .scroll-ind{display:none}
+
+  /* ticker */
+  .t-item{font-size:12px;padding:0 32px}
+
+  /* sections */
+  section{padding:72px 20px}
+  .s-label{font-size:9px;letter-spacing:.3em;margin-bottom:36px}
+
+  /* about */
+  .about-main{padding:40px 24px}
+  .about-headline{font-size:clamp(36px,12vw,56px)}
+  .about-pillars{padding:32px 24px}
+  .pillar-n{font-size:36px}
+  .pillar-title{font-size:18px}
+  .about-stat-row{grid-template-columns:1fr 1fr}
+  .stat-block{padding:28px 20px}
+  .stat-num{font-size:48px}
+  .stat-label{font-size:9px;letter-spacing:.18em}
+
+  /* roster */
+  .roster-head{flex-direction:column;align-items:flex-start;gap:12px;margin-bottom:40px}
+  .roster-title{font-size:clamp(48px,16vw,72px)}
+  .a-card{aspect-ratio:3/4}
+  .a-name{font-size:clamp(24px,7vw,34px)}
+  .a-links{flex-wrap:wrap;gap:8px}
+  .a-link{font-size:9px;padding:5px 10px}
+  .epk-card{padding:28px 24px}
+  .epk-title{font-size:20px}
+
+  /* player */
+  .player-art{aspect-ratio:1;min-height:260px}
+  .player-art-letter{font-size:clamp(80px,22vw,140px)}
+  .player-controls{padding:32px 24px;gap:24px}
+  .track-name{font-size:clamp(32px,10vw,52px)}
+  .ctrl-play{width:50px;height:50px}
+  .ctrl-play svg,.ctrl-btn svg{width:20px;height:20px}
+  .vol-row{display:none} /* hide volume on mobile — touch doesn't need it */
+  .track-row{padding:16px 20px;gap:14px}
+  .tr-name{font-size:13px}
+  .tr-dl{padding:8px 12px;font-size:9px}
+
+  /* forms */
+  .contact-panel{padding:40px 24px}
+  .cp-title{font-size:clamp(32px,11vw,52px)}
+  .cp-desc{font-size:11px;margin-bottom:32px}
+  .form-label{font-size:8px;letter-spacing:.25em}
+  .form-input,.form-select,.form-textarea{font-size:15px}
+  .form-submit{
+    padding:18px 20px;font-size:22px;
+    flex-direction:row;gap:12px;justify-content:space-between;
+  }
+  .btn-send-code{
+    padding:18px 20px;font-size:22px;
+    flex-direction:row;gap:12px;justify-content:space-between;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+    box-sizing:border-box;
+  }
+
+  /* OTP */
+  .otp-digit{
+    font-size:22px;padding:14px 0;
+    min-width:0;flex:1;
+  }
+  .otp-input-row{gap:6px}
+  .otp-actions{flex-direction:column;gap:8px}
+  .otp-verify{
+    width:100%;font-size:18px;padding:16px 20px;
+  }
+  .otp-resend{
+    width:100%;text-align:center;padding:14px 20px;font-size:9px;
+  }
+  .otp-desc{font-size:10px}
+  .otp-timer{text-align:center}
+  .form-success{padding:48px 16px;min-height:320px}
+  .form-success h3{font-size:clamp(24px,8vw,36px)}
+
+  /* footer */
+  footer{padding:32px 20px;gap:18px}
+  .foot-logo{font-size:22px}
+  .foot-links{flex-wrap:wrap;justify-content:center;gap:16px}
+  .btm-marquee{padding:8px 0}
+  .btm-item{font-size:11px;padding:0 32px}
+  body{padding-bottom:38px}
+}
+
+/* ── VERY SMALL (≤ 380px, iPhone SE etc) ── */
+@media(max-width:380px){
+  .hero-title{font-size:58px}
+  .otp-digit{font-size:18px;padding:12px 0}
+  .otp-input-row{gap:4px}
+  .about-stat-row{grid-template-columns:1fr}
+  .ctrl-row{gap:10px}
 }
 </style>
 </head>
