@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="AGM Music Group — Elite music agency and independent label bridging local talent with global distribution.">
 <title>AGM Music Group | Elite Music Agency & Independent Label</title>
+<!-- EmailJS SDK — loaded in <head> so it works on file://, GitHub Pages, and any server -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -2205,15 +2207,16 @@ function startResendTimer(timerEl, resendBtn, seconds, onResend){
 /* ── generate OTP & send via EmailJS ── */
 async function sendOtp(email, nameVal, fromLabel){
   const code = String(Math.floor(100000+Math.random()*900000));
+  /* Keys must exactly match your EmailJS template variable names */
   const params = {
-    to_email:  email,
-    to_name:   nameVal,
-    otp_code:  code,
-    from_label:fromLabel,
-    reply_to:  email
+    email:      email,       /* {{email}} in template — recipient address */
+    to_name:    nameVal,     /* {{to_name}} */
+    otp_code:   code,        /* {{otp_code}} */
+    from_label: fromLabel,   /* {{from_label}} */
+    reply_to:   email        /* {{reply_to}} */
   };
-  /* EmailJS SDK loaded via script tag */
-  await emailjs.send(EJS_SVC, EJS_TPL, params, EJS_PUB);
+  console.log('[AGM] Sending OTP via EmailJS to:', email, '| code:', code);
+  await emailjs.send(EJS_SVC, EJS_TPL, params);
   return code;
 }
 
@@ -2347,28 +2350,43 @@ function wireForm(cfg){
   });
 }
 
-/* ── inject EmailJS SDK then wire both forms ── */
-(function loadEmailJS(){
-  const s=document.createElement('script');
-  s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-  s.onload=()=>{
-    wireForm({
-      formId:'biz-form', sendCodeBtnId:'biz-send-code',
-      otpStageId:'biz-otp-stage', otpEmailLabelId:'biz-otp-email',
-      otpRowId:'biz-otp-row', otpVerifyId:'biz-otp-verify',
-      otpResendId:'biz-otp-resend', otpTimerId:'biz-otp-timer',
-      successId:'biz-success', fromLabel:'Business Inquiry'
+/* ── init EmailJS 0026 wire both forms ── */
+/* EmailJS already loaded via <head> <script> tag — just init and wire */
+(function initAndWire(){
+  if(typeof emailjs === 'undefined'){
+    console.error('[AGM] EmailJS not available — SDK may be blocked. Are you online?');
+    /* Show a friendly message on every send-code button */
+    document.querySelectorAll('.btn-send-code').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        let e=btn.parentElement.querySelector('.form-err');
+        if(!e){ e=document.createElement('p'); e.className='form-err';
+          Object.assign(e.style,{fontFamily:'var(--font-mono)',fontSize:'11px',
+            color:'#ff6060',marginTop:'14px',letterSpacing:'.12em'});
+          btn.insertAdjacentElement('afterend',e); }
+        e.textContent='Could not connect to email service. Please check your internet connection.';
+        setTimeout(()=>e.remove(),6000);
+      });
     });
-    wireForm({
-      formId:'demo-form', sendCodeBtnId:'demo-send-code',
-      otpStageId:'demo-otp-stage', otpEmailLabelId:'demo-otp-email',
-      otpRowId:'demo-otp-row', otpVerifyId:'demo-otp-verify',
-      otpResendId:'demo-otp-resend', otpTimerId:'demo-otp-timer',
-      successId:'demo-success', fromLabel:'Demo Submission'
-    });
-  };
-  s.onerror=()=>console.error('EmailJS SDK failed to load');
-  document.head.appendChild(s);
+    return;
+  }
+  /* Initialize with Public Key */
+  emailjs.init({ publicKey: EJS_PUB });
+  console.log('[AGM] EmailJS v4 initialized | svc:', EJS_SVC, '| tpl:', EJS_TPL);
+
+  wireForm({
+    formId:'biz-form', sendCodeBtnId:'biz-send-code',
+    otpStageId:'biz-otp-stage', otpEmailLabelId:'biz-otp-email',
+    otpRowId:'biz-otp-row', otpVerifyId:'biz-otp-verify',
+    otpResendId:'biz-otp-resend', otpTimerId:'biz-otp-timer',
+    successId:'biz-success', fromLabel:'Business Inquiry'
+  });
+  wireForm({
+    formId:'demo-form', sendCodeBtnId:'demo-send-code',
+    otpStageId:'demo-otp-stage', otpEmailLabelId:'demo-otp-email',
+    otpRowId:'demo-otp-row', otpVerifyId:'demo-otp-verify',
+    otpResendId:'demo-otp-resend', otpTimerId:'demo-otp-timer',
+    successId:'demo-success', fromLabel:'Demo Submission'
+  });
 })();
 
 /* shake keyframes injected once */
