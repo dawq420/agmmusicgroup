@@ -2136,24 +2136,52 @@ function showGenericError(btn, msg){
 }
 
 function showSuccess(formEl, successEl){
-  /* hide all form children */
-  Array.from(formEl.children).forEach(ch=>{ ch.style.opacity='0'; ch.style.pointerEvents='none'; });
+  /* 1. Hide every child EXCEPT the success panel itself */
+  Array.from(formEl.children).forEach(ch=>{
+    if(ch===successEl) return;
+    ch.style.opacity='0';
+    ch.style.pointerEvents='none';
+  });
+
+  /* 2. Display success panel — force colours so text is never invisible */
   successEl.style.display='flex';
   successEl.style.opacity='0';
-  successEl.style.pointerEvents='';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>successEl.classList.add('visible')));
+  successEl.style.transform='translateY(20px)';
+  successEl.style.pointerEvents='auto';
+  successEl.style.color='#f0ede6';
+  successEl.style.background='transparent';
+
+  /* 3. Fade in on next two rAF ticks */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    successEl.style.transition='opacity .65s cubic-bezier(0.16,1,0.3,1),transform .65s cubic-bezier(0.16,1,0.3,1)';
+    successEl.style.opacity='1';
+    successEl.style.transform='translateY(0)';
+    successEl.classList.add('visible');
+  }));
+
+  /* 4. Scroll into view on mobile */
+  setTimeout(()=>successEl.scrollIntoView({behavior:'smooth',block:'center'}),120);
+
+  /* 5. Auto-reset after 7s */
   setTimeout(()=>{
-    successEl.classList.remove('visible');
+    successEl.style.opacity='0';
     setTimeout(()=>{
       successEl.style.display='none';
-      Array.from(formEl.children).forEach(ch=>{ ch.style.opacity=''; ch.style.pointerEvents=''; });
+      successEl.style.transition='';
+      successEl.style.transform='';
+      successEl.classList.remove('visible');
+      Array.from(formEl.children).forEach(ch=>{
+        ch.style.opacity='';
+        ch.style.pointerEvents='';
+      });
       formEl.reset();
-      /* reset OTP stage too */
       formEl.querySelectorAll('.otp-stage').forEach(s=>{
         s.style.display='none'; s.classList.remove('visible');
       });
-      formEl.querySelectorAll('.btn-send-code').forEach(b=>{ b.style.display=''; b.style.opacity=''; b.style.pointerEvents=''; });
-    },600);
+      formEl.querySelectorAll('.btn-send-code').forEach(b=>{
+        b.style.display=''; b.style.opacity=''; b.style.pointerEvents='';
+      });
+    },650);
   },7000);
 }
 
