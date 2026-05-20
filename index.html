@@ -524,15 +524,16 @@ section{padding:128px 52px}
     linear-gradient(155deg,#1e1e1e 0%,#080808 60%,#141414 100%);
   transition:transform .65s var(--ease-out);
 }
-/* Photo layer — fades in on hover via pseudo-element opacity */
-.a-img.julien::after{
-  content:'';
+/* Photo layer — absolutely positioned sibling inside the card */
+.julien-photo{
   position:absolute;inset:0;
   background:url('julian-blur.jpg') center/cover no-repeat;
   opacity:0;
   transition:opacity .55s ease;
+  z-index:1;
+  pointer-events:none;
 }
-.a-card:hover .a-img.julien::after{
+.a-card:hover .julien-photo{
   opacity:1;
 }
 .a-img.jdyhr{
@@ -1514,6 +1515,7 @@ body{padding-bottom:42px}
     <!-- JULIAN NOBLEMAN -->
     <div class="a-card">
       <div class="a-img julien"></div>
+      <div class="julien-photo"></div>
       <div class="a-num">01</div>
       <div class="a-init">JN</div>
       <div class="a-grad"></div>
