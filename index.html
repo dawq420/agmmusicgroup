@@ -535,6 +535,17 @@ section{padding:128px 52px}
 .a-card:hover .julien-photo{
   opacity:1;
 }
+.jdyhr-photo{
+  position:absolute;inset:0;
+  background:url('jdyhr-blur.jpg') center/cover no-repeat;
+  opacity:0;
+  transition:opacity .55s ease;
+  z-index:1;
+  pointer-events:none;
+}
+.a-card:hover .jdyhr-photo{
+  opacity:1;
+}
 .a-img.jdyhr{
   background:
     radial-gradient(circle at 62% 20%,rgba(140,60,255,.12) 0%,transparent 52%),
@@ -1540,6 +1551,7 @@ body{padding-bottom:42px}
     <!-- JDYHR -->
     <div class="a-card">
       <div class="a-img jdyhr"></div>
+      <div class="jdyhr-photo"></div>
       <div class="a-num">02</div>
       <div class="a-init">JD</div>
       <div class="a-grad"></div>
